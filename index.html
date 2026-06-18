@@ -3,68 +3,150 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rafiq — Privacy Policy</title>
+  <title>Rafiq — Privacy Policy / سياسة الخصوصية</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Segoe UI Arabic", Tahoma, sans-serif;
            max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.65; color: #1a1a1a; }
     h1 { font-size: 1.8rem; } h2 { font-size: 1.2rem; margin-top: 2rem; }
     code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; }
     .muted { color: #666; font-size: 0.9rem; }
+    a { color: #0a6; }
+    .lang-toggle { display: flex; gap: 8px; margin-bottom: 24px; }
+    .lang-toggle button { font: inherit; cursor: pointer; border: 1px solid #ccc; background: #fff;
+           padding: 6px 16px; border-radius: 999px; color: #333; }
+    .lang-toggle button.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    [dir="rtl"] { text-align: right; }
+    [hidden] { display: none; }
   </style>
 </head>
 <body>
-  <h1>Privacy Policy for Rafiq</h1>
-  <p class="muted">Last updated: 18 June 2026</p>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">English</button>
+    <button id="btn-ar" onclick="setLang('ar')">العربية</button>
+  </div>
 
-  <p>Rafiq ("the app") is a free, ad-free Islamic companion app providing prayer times, qibla
-  direction, the Quran, and adhkar. We respect your privacy. This policy explains what data the
-  app handles and why.</p>
+  <!-- ===================== ENGLISH ===================== -->
+  <section id="en" dir="ltr">
+    <h1>Privacy Policy for Rafiq</h1>
+    <p class="muted">Last updated: 18 June 2026</p>
 
-  <h2>Our core principle</h2>
-  <p>Rafiq has <strong>no user accounts, no advertising, no analytics, and no tracking</strong>.
-  We do not operate any servers that store your data. All of your personal settings, bookmarks,
-  and reading progress are stored <strong>locally on your device only</strong> and never leave it.</p>
+    <p>Rafiq ("the app") is a free, ad-free Islamic companion app providing prayer times, qibla
+    direction, the Quran, and adhkar. We respect your privacy. This policy explains what data the
+    app handles and why.</p>
 
-  <h2>Location data</h2>
-  <p>If you grant location permission, the app uses your device location to calculate accurate
-  prayer times and qibla direction for your area. Your coordinates are:</p>
-  <ul>
-    <li>sent to the Aladhan API (<code>api.aladhan.com</code>) to calculate prayer times; and</li>
-    <li>sent to BigDataCloud (<code>api.bigdatacloud.net</code>) to convert your coordinates into a
-        city name for display.</li>
-  </ul>
-  <p>These coordinates are used only to fulfil that request. They are not stored by Rafiq, are not
-  linked to your identity, and are not used for advertising or any other purpose. If you deny
-  location permission, you can still enter a location manually or use the app without prayer-time
-  localization.</p>
+    <h2>Our core principle</h2>
+    <p>Rafiq has <strong>no user accounts, no advertising, no analytics, and no tracking</strong>.
+    We do not operate any servers that store your data. All of your personal settings, bookmarks,
+    and reading progress are stored <strong>locally on your device only</strong> and never leave it.</p>
 
-  <h2>Other network requests</h2>
-  <p>To show Quran text and recitation audio, the app fetches content from
-  <code>api.alquran.cloud</code> and <code>cdn.islamic.network</code>. These requests do not include
-  any personal information about you.</p>
+    <h2>Location data</h2>
+    <p>If you grant location permission, the app uses your device location to calculate accurate
+    prayer times and qibla direction for your area. Your coordinates are:</p>
+    <ul>
+      <li>sent to the Aladhan API (<code>api.aladhan.com</code>) to calculate prayer times; and</li>
+      <li>sent to BigDataCloud (<code>api.bigdatacloud.net</code>) to convert your coordinates into a
+          city name for display.</li>
+    </ul>
+    <p>These coordinates are used only to fulfil that request. They are not stored by Rafiq, are not
+    linked to your identity, and are not used for advertising or any other purpose. If you deny
+    location permission, you can still enter a location manually or use the app without prayer-time
+    localization.</p>
 
-  <h2>Notifications</h2>
-  <p>Prayer-time reminders are scheduled and delivered entirely on your device. The app does not use
-  remote push notifications and does not send your device token to any server.</p>
+    <h2>Other network requests</h2>
+    <p>To show Quran text and recitation audio, the app fetches content from
+    <code>api.alquran.cloud</code> and <code>cdn.islamic.network</code>. These requests do not include
+    any personal information about you.</p>
 
-  <h2>Children's privacy</h2>
-  <p>Rafiq does not knowingly collect personal information from children and is not directed at
-  children under 13.</p>
+    <h2>Notifications</h2>
+    <p>Prayer-time reminders are scheduled and delivered entirely on your device. The app does not use
+    remote push notifications and does not send your device token to any server.</p>
 
-  <h2>Third-party services</h2>
-  <p>The third-party APIs listed above process the requests described. Their handling of network
-  requests is governed by their own privacy policies:</p>
-  <ul>
-    <li>Aladhan — <a href="https://aladhan.com">aladhan.com</a></li>
-    <li>BigDataCloud — <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy">bigdatacloud.com</a></li>
-    <li>AlQuran Cloud / Islamic Network — <a href="https://alquran.cloud">alquran.cloud</a></li>
-  </ul>
+    <h2>Children's privacy</h2>
+    <p>Rafiq does not knowingly collect personal information from children and is not directed at
+    children under 13.</p>
 
-  <h2>Changes to this policy</h2>
-  <p>We may update this policy from time to time. The "Last updated" date above reflects the latest
-  version.</p>
+    <h2>Third-party services</h2>
+    <p>The third-party APIs listed above process the requests described. Their handling of network
+    requests is governed by their own privacy policies:</p>
+    <ul>
+      <li>Aladhan — <a href="https://aladhan.com">aladhan.com</a></li>
+      <li>BigDataCloud — <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy">bigdatacloud.com</a></li>
+      <li>AlQuran Cloud / Islamic Network — <a href="https://alquran.cloud">alquran.cloud</a></li>
+    </ul>
 
-  <h2>Contact</h2>
-  <p>For any questions about this privacy policy, contact: <strong>boogado@yahoo.com</strong></p>
+    <h2>Changes to this policy</h2>
+    <p>We may update this policy from time to time. The "Last updated" date above reflects the latest
+    version.</p>
+
+    <h2>Contact</h2>
+    <p>For any questions about this privacy policy, contact: <strong>boogado@yahoo.com</strong></p>
+  </section>
+
+  <!-- ===================== ARABIC ===================== -->
+  <section id="ar" dir="rtl" lang="ar" hidden>
+    <h1>سياسة الخصوصية لتطبيق رفيق</h1>
+    <p class="muted">آخر تحديث: 18 يونيو 2026</p>
+
+    <p>رفيق ("التطبيق") هو تطبيق إسلامي مجاني وخالٍ من الإعلانات يوفّر مواقيت الصلاة واتجاه القبلة
+    والقرآن الكريم والأذكار. نحن نحترم خصوصيتك. توضّح هذه السياسة البيانات التي يتعامل معها التطبيق
+    وأسباب ذلك.</p>
+
+    <h2>مبدؤنا الأساسي</h2>
+    <p>لا يحتوي رفيق على <strong>حسابات مستخدمين، ولا إعلانات، ولا تحليلات، ولا تتبّع</strong>.
+    نحن لا نشغّل أي خوادم لتخزين بياناتك. تُخزَّن جميع إعداداتك الشخصية وعلاماتك المرجعية وتقدّم
+    القراءة <strong>على جهازك محليًا فقط</strong> ولا تغادره أبدًا.</p>
+
+    <h2>بيانات الموقع</h2>
+    <p>إذا منحت إذن الوصول إلى الموقع، يستخدم التطبيق موقع جهازك لحساب مواقيت الصلاة واتجاه القبلة
+    بدقّة لمنطقتك. إنّ إحداثياتك:</p>
+    <ul>
+      <li>تُرسَل إلى واجهة Aladhan (<code>api.aladhan.com</code>) لحساب مواقيت الصلاة؛ و</li>
+      <li>تُرسَل إلى BigDataCloud (<code>api.bigdatacloud.net</code>) لتحويل إحداثياتك إلى اسم مدينة
+          لعرضه.</li>
+    </ul>
+    <p>تُستخدم هذه الإحداثيات فقط لتنفيذ ذلك الطلب. لا يخزّنها رفيق، ولا تُربط بهويتك، ولا تُستخدم
+    للإعلانات أو لأي غرض آخر. إذا رفضت إذن الموقع، فيمكنك إدخال موقعك يدويًا أو استخدام التطبيق دون
+    تحديد مواقيت الصلاة وفقًا لموقعك.</p>
+
+    <h2>طلبات الشبكة الأخرى</h2>
+    <p>لعرض نص القرآن الكريم وتلاوته الصوتية، يجلب التطبيق المحتوى من <code>api.alquran.cloud</code>
+    و<code>cdn.islamic.network</code>. لا تتضمّن هذه الطلبات أي معلومات شخصية عنك.</p>
+
+    <h2>الإشعارات</h2>
+    <p>تُجدوَل تذكيرات مواقيت الصلاة وتُسلَّم بالكامل على جهازك. لا يستخدم التطبيق الإشعارات الفورية
+    عن بُعد، ولا يرسل رمز جهازك إلى أي خادم.</p>
+
+    <h2>خصوصية الأطفال</h2>
+    <p>لا يجمع رفيق عن قصد أي معلومات شخصية من الأطفال، وهو غير موجَّه للأطفال دون سن 13 عامًا.</p>
+
+    <h2>خدمات الطرف الثالث</h2>
+    <p>تعالج واجهات الطرف الثالث المذكورة أعلاه الطلبات الموضّحة، ويخضع تعاملها مع طلبات الشبكة
+    لسياسات الخصوصية الخاصة بها:</p>
+    <ul>
+      <li>Aladhan — <a href="https://aladhan.com">aladhan.com</a></li>
+      <li>BigDataCloud — <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy">bigdatacloud.com</a></li>
+      <li>AlQuran Cloud / Islamic Network — <a href="https://alquran.cloud">alquran.cloud</a></li>
+    </ul>
+
+    <h2>التغييرات على هذه السياسة</h2>
+    <p>قد نُحدّث هذه السياسة من وقت لآخر. يعكس تاريخ "آخر تحديث" أعلاه أحدث نسخة.</p>
+
+    <h2>التواصل</h2>
+    <p>لأي أسئلة حول سياسة الخصوصية هذه، يُرجى التواصل عبر: <strong>boogado@yahoo.com</strong></p>
+  </section>
+
+  <script>
+    function setLang(lang) {
+      var isAr = lang === 'ar';
+      document.getElementById('ar').hidden = !isAr;
+      document.getElementById('en').hidden = isAr;
+      document.getElementById('btn-ar').classList.toggle('active', isAr);
+      document.getElementById('btn-en').classList.toggle('active', !isAr);
+      document.documentElement.lang = lang;
+      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+    }
+    // Default to Arabic for Arabic-locale browsers, English otherwise.
+    if ((navigator.language || '').toLowerCase().indexOf('ar') === 0) setLang('ar');
+  </script>
 </body>
 </html>
