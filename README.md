@@ -1,6 +1,6 @@
 # Rafiq — Privacy Policy
 
-This repository hosts the privacy policy for **Rafiq (رفيق)**, a free, ad-free Islamic
+This repository hosts the privacy policy for **Rafiq (رفيق)**, a private Islamic
 companion app for prayer times, qibla direction, the Qur'an, and adhkar.
 
 📄 **Live policy:** https://vette1123.github.io/rafiq-privacy/
