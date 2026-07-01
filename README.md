@@ -10,21 +10,22 @@ referenced in the app's Google Play Store listing and Data safety form.
 
 ## The short version
 
-Rafiq has **no user accounts, no advertising, no analytics, and no tracking**. There are no
-Rafiq servers storing your data — every setting, bookmark, and reading position lives **only
-on your device**.
+Rafiq has **no user accounts and no advertising**. There are no Rafiq servers storing your data —
+every setting, bookmark, and reading position lives **on your device**.
 
-The app talks to a few third-party APIs strictly to do its job:
+The app talks to a few third-party services strictly to do its job:
 
 | Service | Purpose | Data sent |
 | --- | --- | --- |
 | [Aladhan](https://aladhan.com) | Calculate prayer times | Coordinates (if you grant location) |
 | [BigDataCloud](https://www.bigdatacloud.com) | Turn coordinates into a city name | Coordinates (if you grant location) |
 | [AlQuran Cloud / Islamic Network](https://alquran.cloud) | Qur'an text & recitation audio | No personal data |
+| [PostHog](https://posthog.com/privacy) | Anonymous usage analytics (EU servers) | Non-identifying events; **no** coordinates |
 
 Coordinates are used only to fulfil the request — never stored by Rafiq, never linked to your
-identity, never used for advertising. Prayer-time notifications are scheduled and delivered
-entirely on-device; there are no remote push notifications.
+identity, never used for advertising, and never sent to analytics. Usage analytics are
+**anonymous and aggregate** — they can't identify you personally. Prayer-time notifications are
+scheduled and delivered entirely on-device; there are no remote push notifications.
 
 See [`index.html`](./index.html) for the full policy.
 
