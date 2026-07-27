@@ -3,7 +3,8 @@
 The published privacy policy for **Rafiq (رفيق)**, the Islamic companion app
 (`com.mohamedgado.rafiq`).
 
-**Live policy:** https://vette1123.github.io/rafiq-privacy/
+- **App on Google Play:** https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq
+- **Live policy:** https://vette1123.github.io/rafiq-privacy/
 
 The URL is referenced from the Google Play listing and Data safety form, and from inside
 the app (`Settings, Privacy policy`), so it must always resolve.
@@ -105,6 +106,7 @@ When the app changes, the policy changes in the same session as the feature, not
 
 ## Google Play
 
+- Store listing: `https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq`
 - Privacy policy URL: `https://vette1123.github.io/rafiq-privacy/`
 - Data deletion URL: not applicable, no accounts
 
