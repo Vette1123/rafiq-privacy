@@ -1,179 +1,1719 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rafiq — Privacy Policy / سياسة الخصوصية</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Segoe UI Arabic", Tahoma, sans-serif;
-           max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.65; color: #1a1a1a; }
-    h1 { font-size: 1.8rem; } h2 { font-size: 1.2rem; margin-top: 2rem; }
-    code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; }
-    .muted { color: #666; font-size: 0.9rem; }
-    a { color: #0a6; }
-    .lang-toggle { display: flex; gap: 8px; margin-bottom: 24px; }
-    .lang-toggle button { font: inherit; cursor: pointer; border: 1px solid #ccc; background: #fff;
-           padding: 6px 16px; border-radius: 999px; color: #333; }
-    .lang-toggle button.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-    [dir="rtl"] { text-align: right; }
-    [hidden] { display: none; }
-  </style>
-</head>
-<body>
-  <div class="lang-toggle">
-    <button id="btn-en" class="active" onclick="setLang('en')">English</button>
-    <button id="btn-ar" onclick="setLang('ar')">العربية</button>
-  </div>
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rafiq · Privacy Policy · سياسة الخصوصية</title>
+    <meta
+      name="description"
+      content="Privacy policy for the Rafiq Islamic companion app, in English and Arabic: no accounts, no server of ours, what stays on your device, and every service the app contacts."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1614" media="(prefers-color-scheme: dark)" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://vette1123.github.io/rafiq-privacy/" />
+    <meta property="og:title" content="Rafiq · Privacy Policy · سياسة الخصوصية" />
+    <meta
+      property="og:description"
+      content="Rafiq has no accounts and no backend of ours. What stays on your device, what leaves it, and to whom. English and Arabic."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vette1123.github.io/rafiq-privacy/" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E1614'/%3E%3Cpath d='M11 25V15a5 5 0 0 1 10 0v10' stroke='%23D6B566' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <style>
+      /* Self-contained on purpose: no web fonts, no third-party scripts, no cookies,
+         no analytics. A privacy page should not be the thing that tracks you. */
+      :root {
+        --bg: #faf9f5;
+        --surface: #ffffff;
+        --surface-2: #f3f1e9;
+        --text: #171b19;
+        --muted: #5b635f;
+        --line: #e3dfd2;
+        --accent: #7a5f16;
+        --accent-soft: #f7efdc;
+        --radius: 14px;
+        --maxw: 800px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e1614;
+          --surface: #141e1b;
+          --surface-2: #1a2622;
+          --text: #e9efeb;
+          --muted: #9aa8a2;
+          --line: #26332e;
+          --accent: #d6b566;
+          --accent-soft: #1e2a20;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+          sans-serif;
+        font-size: 17px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      [dir="rtl"] body,
+      [lang="ar"] {
+        font-family: "Cairo", "Noto Sans Arabic", "Segoe UI Arabic", "Segoe UI", Tahoma, system-ui,
+          -apple-system, Arial, sans-serif;
+      }
+      .wrap {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 20px 96px;
+      }
 
-  <!-- ===================== ENGLISH ===================== -->
-  <section id="en" dir="ltr">
-    <h1>Privacy Policy for Rafiq</h1>
-    <p class="muted">Last updated: 1 July 2026</p>
+      /* Header */
+      .top {
+        border-bottom: 1px solid var(--line);
+        background: var(--surface);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .top-inner {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 60px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .brand svg {
+        display: block;
+      }
+      .switch {
+        display: inline-flex;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 3px;
+        background: var(--surface-2);
+      }
+      .switch button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 5px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background-color 0.18s ease, color 0.18s ease;
+      }
+      .switch button[aria-pressed="true"] {
+        background: var(--accent);
+        color: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        .switch button[aria-pressed="true"] {
+          color: #1a1408;
+        }
+      }
+      .switch button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
 
-    <p>Rafiq ("the app") is a private Islamic companion app providing prayer times, qibla
-    direction, the Quran, and adhkar. We respect your privacy. This policy explains what data the
-    app handles and why.</p>
+      /* Hero */
+      h1 {
+        font-size: clamp(1.9rem, 5vw, 2.5rem);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin: 40px 0 10px;
+      }
+      .lede {
+        color: var(--muted);
+        font-size: 1.05rem;
+        margin: 0 0 8px;
+        max-width: 62ch;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 0.86rem;
+        margin: 0 0 28px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .meta b {
+        color: var(--text);
+        font-weight: 600;
+      }
 
-    <h2>Our core principle</h2>
-    <p>Rafiq has <strong>no user accounts and no advertising</strong>. We do not operate any servers
-    that store your data. All of your personal settings, bookmarks, and reading progress are stored
-    <strong>locally on your device</strong>. The only information that ever leaves your device is the
-    optional network requests and the anonymous usage analytics described below.</p>
+      /* At a glance: tiles, not a bullet box */
+      .glance {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 28px 0 40px;
+      }
+      @media (max-width: 620px) {
+        .glance {
+          grid-template-columns: 1fr;
+        }
+      }
+      .tile {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 16px 18px;
+      }
+      .tile.lead {
+        grid-column: 1 / -1;
+        background: var(--accent-soft);
+      }
+      .tile h2 {
+        margin: 0 0 4px;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
+      }
+      .tile p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.94rem;
+        line-height: 1.65;
+        max-width: none;
+      }
 
-    <h2>Location data</h2>
-    <p>If you grant location permission, the app uses your device location to calculate accurate
-    prayer times and qibla direction for your area. Your coordinates are:</p>
-    <ul>
-      <li>sent to the Aladhan API (<code>api.aladhan.com</code>) to calculate prayer times; and</li>
-      <li>sent to BigDataCloud (<code>api.bigdatacloud.net</code>) to convert your coordinates into a
-          city name for display.</li>
-    </ul>
-    <p>These coordinates are used only to fulfil that request. They are not stored by Rafiq, are not
-    linked to your identity, and are not used for advertising or any other purpose. If you deny
-    location permission, you can still enter a location manually or use the app without prayer-time
-    localization.</p>
+      /* TOC */
+      nav.toc {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px 22px;
+        margin: 0 0 44px;
+        background: var(--surface);
+      }
+      nav.toc h2 {
+        margin: 0 0 8px;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      nav.toc ol {
+        margin: 0;
+        padding-inline-start: 20px;
+        columns: 2;
+        column-gap: 28px;
+        font-size: 0.95rem;
+      }
+      @media (max-width: 620px) {
+        nav.toc ol {
+          columns: 1;
+        }
+      }
+      nav.toc li {
+        margin: 3px 0;
+        break-inside: avoid;
+      }
 
-    <h2>Other network requests</h2>
-    <p>To show Quran text and recitation audio, the app fetches content from
-    <code>api.alquran.cloud</code> and <code>cdn.islamic.network</code>. These requests do not include
-    any personal information about you.</p>
+      h2 {
+        font-size: 1.32rem;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+        margin: 44px 0 12px;
+        scroll-margin-top: 80px;
+      }
+      h3 {
+        font-size: 1.02rem;
+        margin: 26px 0 8px;
+      }
+      p {
+        margin: 0 0 14px;
+        max-width: 68ch;
+      }
+      ul,
+      ol {
+        max-width: 68ch;
+      }
+      li {
+        margin: 5px 0;
+      }
+      a {
+        color: var(--accent);
+        text-underline-offset: 3px;
+      }
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 3px;
+      }
+      strong {
+        font-weight: 700;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.86em;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        padding: 1px 6px;
+        border-radius: 6px;
+        direction: ltr;
+        unicode-bidi: embed;
+        display: inline-block;
+      }
 
-    <h2>Usage analytics</h2>
-    <p>To understand how Rafiq is used and to improve it, the app collects <strong>anonymous,
-    aggregate usage analytics</strong>. This covers events such as which screens you open, which
-    features you use (for example playing audio, opening a surah, or completing a tasbih), and your
-    current app preferences (language, theme, calculation method), together with basic device and
-    session information (such as app version, operating system, and a randomly-generated anonymous
-    identifier).</p>
-    <p>This data <strong>cannot identify you personally</strong>. We do not collect your name, email
-    address, contacts, or the content you read, type, or bookmark, and your <strong>location
-    coordinates are never sent to analytics</strong>. Analytics are processed on our behalf by
-    PostHog, on servers located in the <strong>European Union</strong>.</p>
+      /* Tables */
+      .table-scroll {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        margin: 18px 0 24px;
+        background: var(--surface);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 560px;
+        font-size: 0.92rem;
+      }
+      caption {
+        caption-side: top;
+        text-align: start;
+        color: var(--muted);
+        font-size: 0.86rem;
+        padding: 12px 16px 0;
+      }
+      th,
+      td {
+        text-align: start;
+        padding: 11px 16px;
+        vertical-align: top;
+      }
+      thead th {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      tbody tr + tr {
+        border-top: 1px solid var(--line);
+      }
+      td code {
+        white-space: nowrap;
+      }
 
-    <h2>Notifications</h2>
-    <p>Prayer-time reminders are scheduled and delivered entirely on your device. The app does not use
-    remote push notifications and does not send your device token to any server.</p>
+      .note {
+        border-inline-start: 3px solid var(--accent);
+        background: var(--surface-2);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: 12px 18px;
+        margin: 20px 0;
+        color: var(--text);
+      }
+      [dir="rtl"] .note {
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+      .note p:last-child {
+        margin-bottom: 0;
+      }
 
-    <h2>Children's privacy</h2>
-    <p>Rafiq does not knowingly collect personal information from children and is not directed at
-    children under 13.</p>
+      .contact {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+        background: var(--surface);
+        margin-top: 20px;
+      }
+      .contact p:last-child {
+        margin-bottom: 0;
+      }
 
-    <h2>Third-party services</h2>
-    <p>The third-party APIs listed above process the requests described. Their handling of network
-    requests is governed by their own privacy policies:</p>
-    <ul>
-      <li>Aladhan — <a href="https://aladhan.com">aladhan.com</a></li>
-      <li>BigDataCloud — <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy">bigdatacloud.com</a></li>
-      <li>AlQuran Cloud / Islamic Network — <a href="https://alquran.cloud">alquran.cloud</a></li>
-      <li>PostHog (analytics) — <a href="https://posthog.com/privacy">posthog.com/privacy</a></li>
-    </ul>
+      footer.page {
+        border-top: 1px solid var(--line);
+        margin-top: 56px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+      .lang-hidden {
+        display: none;
+      }
+      .skip {
+        position: absolute;
+        inset-inline-start: -9999px;
+      }
+      .skip:focus {
+        position: static;
+        display: inline-block;
+        padding: 8px 12px;
+      }
 
-    <h2>Changes to this policy</h2>
-    <p>We may update this policy from time to time. The "Last updated" date above reflects the latest
-    version.</p>
+      /* Print and save-as-PDF: the visible language prints as a plain document. Link
+         targets are spelled out, since a printed hyperlink is otherwise a dead end. */
+      @media print {
+        :root {
+          --bg: #ffffff;
+          --surface: #ffffff;
+          --surface-2: #ffffff;
+          --text: #000000;
+          --muted: #333333;
+          --line: #999999;
+          --accent: #000000;
+          --accent-soft: #ffffff;
+        }
+        body {
+          font-size: 11pt;
+          line-height: 1.5;
+        }
+        .top,
+        .switch,
+        .skip,
+        nav.toc {
+          display: none;
+        }
+        .wrap {
+          max-width: none;
+          padding: 0;
+        }
+        h1 {
+          margin-top: 0;
+        }
+        h2 {
+          margin-top: 20pt;
+          break-after: avoid;
+        }
+        .glance {
+          display: block;
+        }
+        .tile {
+          border: 0;
+          padding: 0;
+          margin-bottom: 8pt;
+        }
+        p,
+        li {
+          orphans: 3;
+          widows: 3;
+        }
+        .table-scroll,
+        table {
+          overflow: visible;
+          min-width: 0;
+          break-inside: auto;
+        }
+        tr {
+          break-inside: avoid;
+        }
+        a[href^="http"]::after {
+          content: " (" attr(href) ")";
+          font-size: 9pt;
+          color: #333;
+          word-break: break-all;
+        }
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "PrivacyPolicy",
+        "name": "Rafiq Privacy Policy",
+        "alternateName": "سياسة الخصوصية لتطبيق رفيق",
+        "url": "https://vette1123.github.io/rafiq-privacy/",
+        "inLanguage": ["en", "ar"],
+        "dateModified": "2026-07-27",
+        "about": {
+          "@type": "MobileApplication",
+          "name": "Rafiq",
+          "alternateName": "رفيق",
+          "applicationCategory": "LifestyleApplication",
+          "operatingSystem": "Android",
+          "identifier": "com.mohamedgado.rafiq"
+        },
+        "publisher": {
+          "@type": "Person",
+          "name": "Mohamed Gado",
+          "email": "boogado@yahoo.com"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content / تخطي إلى المحتوى</a>
+    <header class="top">
+      <div class="top-inner">
+        <span class="brand">
+          <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="#0E1614" />
+            <path
+              d="M11 25V15a5 5 0 0 1 10 0v10"
+              stroke="#D6B566"
+              stroke-width="2.6"
+              fill="none"
+              stroke-linecap="round"
+            />
+          </svg>
+          Rafiq
+        </span>
+        <div class="switch" role="group" aria-label="Language / اللغة">
+          <button type="button" id="btn-en" aria-pressed="true" lang="en">English</button>
+          <button type="button" id="btn-ar" aria-pressed="false" lang="ar">العربية</button>
+        </div>
+      </div>
+    </header>
 
-    <h2>Contact</h2>
-    <p>For any questions about this privacy policy, contact: <strong>boogado@yahoo.com</strong></p>
-  </section>
+    <main class="wrap" id="main">
+      <!-- ================================ ENGLISH ================================ -->
+      <section id="doc-en" lang="en" dir="ltr">
+        <h1>Privacy Policy for Rafiq</h1>
+        <p class="lede">
+          Rafiq is a quiet Islamic companion: prayer times and adhan reminders, qibla, the Qur'an
+          with recitation, adhkar and tasbih, duas, the Hijri calendar, audio collections, home
+          widgets and share cards. It has no accounts and no backend of ours. This page explains
+          what it keeps on your device, what leaves it, and to whom.
+        </p>
+        <p class="meta">
+          Last updated: <b><time datetime="2026-07-27">27 July 2026</time></b> · Covers app version
+          <b>1.48.1</b> and later · Package <code>com.mohamedgado.rafiq</code>
+        </p>
 
-  <!-- ===================== ARABIC ===================== -->
-  <section id="ar" dir="rtl" lang="ar" hidden>
-    <h1>سياسة الخصوصية لتطبيق رفيق</h1>
-    <p class="muted">آخر تحديث: 1 يوليو 2026</p>
+        <div class="glance">
+          <div class="tile lead">
+            <h2>The short version</h2>
+            <p>
+              No accounts, no ads, no data selling, and no server owned by Rafiq. Your settings,
+              bookmarks, reading progress, tasbih and adhkar counts, prayer tracker and audio
+              history stay <strong>on your device only</strong>. The app talks to public Islamic and
+              map APIs to fetch content, and sends anonymous usage events to improve itself.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>Location is optional</h2>
+            <p>
+              Used to compute prayer times and qibla for where you are, only while the app is open.
+              Deny it and you can search for your city instead.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>Nothing you write is collected</h2>
+            <p>
+              Search text, bookmarks, greeting names and what you read never go to analytics. Your
+              coordinates never go to analytics either.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>Reminders are local</h2>
+            <p>
+              Adhan, pre-adhan and salawat notifications are scheduled on the device. No push
+              server, no device token, no message from us.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>Uninstalling is the erase button</h2>
+            <p>
+              There is no account to delete and no copy of your data with us. Removing the app
+              removes everything it stored.
+            </p>
+          </div>
+        </div>
 
-    <p>رفيق ("التطبيق") هو تطبيق إسلامي خاص يوفّر مواقيت الصلاة واتجاه القبلة
-    والقرآن الكريم والأذكار. نحن نحترم خصوصيتك. توضّح هذه السياسة البيانات التي يتعامل معها التطبيق
-    وأسباب ذلك.</p>
+        <nav class="toc" aria-label="Contents">
+          <h2>Contents</h2>
+          <ol>
+            <li><a href="#en-1">Who we are and what this covers</a></li>
+            <li><a href="#en-2">No accounts, no server of ours</a></li>
+            <li><a href="#en-3">What stays on your device</a></li>
+            <li><a href="#en-4">Location, prayer times and the calendar</a></li>
+            <li><a href="#en-5">Qibla and device sensors</a></li>
+            <li><a href="#en-6">Qur'an text, page fonts and translations</a></li>
+            <li><a href="#en-7">Recitation and audio collections</a></li>
+            <li><a href="#en-8">Notifications, exact alarms and widgets</a></li>
+            <li><a href="#en-9">Share cards, greetings and QR codes</a></li>
+            <li><a href="#en-10">Analytics and crash reporting</a></li>
+            <li><a href="#en-11">App updates and rating</a></li>
+            <li><a href="#en-12">Android permissions</a></li>
+            <li><a href="#en-13">How we secure data</a></li>
+            <li><a href="#en-14">Retention and deletion</a></li>
+            <li><a href="#en-15">Your rights</a></li>
+            <li><a href="#en-16">Children's privacy</a></li>
+            <li><a href="#en-17">Third-party services</a></li>
+            <li><a href="#en-18">Changes to this policy</a></li>
+            <li><a href="#en-19">Contact</a></li>
+          </ol>
+        </nav>
 
-    <h2>مبدؤنا الأساسي</h2>
-    <p>لا يحتوي رفيق على <strong>حسابات مستخدمين ولا إعلانات</strong>. نحن لا نشغّل أي خوادم لتخزين
-    بياناتك. تُخزَّن جميع إعداداتك الشخصية وعلاماتك المرجعية وتقدّم القراءة <strong>على جهازك
-    محليًا</strong>. المعلومات الوحيدة التي تغادر جهازك هي طلبات الشبكة الاختيارية وتحليلات الاستخدام
-    المجهولة الموضّحة أدناه.</p>
+        <h2 id="en-1">1. Who we are and what this covers</h2>
+        <p>
+          Rafiq (<code>com.mohamedgado.rafiq</code>) is built and operated by one person, Mohamed
+          Gado. This policy covers the Rafiq Android app, any future iOS release, and this page
+          itself. The page sets no cookies and loads nothing from another host.
+        </p>
+        <p>
+          You can open this policy from inside the app at any time:
+          <strong>Settings, then Privacy policy</strong>.
+        </p>
 
-    <h2>بيانات الموقع</h2>
-    <p>إذا منحت إذن الوصول إلى الموقع، يستخدم التطبيق موقع جهازك لحساب مواقيت الصلاة واتجاه القبلة
-    بدقّة لمنطقتك. إنّ إحداثياتك:</p>
-    <ul>
-      <li>تُرسَل إلى واجهة Aladhan (<code>api.aladhan.com</code>) لحساب مواقيت الصلاة؛ و</li>
-      <li>تُرسَل إلى BigDataCloud (<code>api.bigdatacloud.net</code>) لتحويل إحداثياتك إلى اسم مدينة
-          لعرضه.</li>
-    </ul>
-    <p>تُستخدم هذه الإحداثيات فقط لتنفيذ ذلك الطلب. لا يخزّنها رفيق، ولا تُربط بهويتك، ولا تُستخدم
-    للإعلانات أو لأي غرض آخر. إذا رفضت إذن الموقع، فيمكنك إدخال موقعك يدويًا أو استخدام التطبيق دون
-    تحديد مواقيت الصلاة وفقًا لموقعك.</p>
+        <h2 id="en-2">2. No accounts, no server of ours</h2>
+        <p>
+          There is no sign-up, no sign-in, no profile and no sync. Rafiq operates
+          <strong>no backend</strong>: every data source it uses is a public API run by someone
+          else, and your device talks to those directly. There is no database of ours with users in
+          it, because there is no database of ours at all.
+        </p>
+        <p>
+          The practical consequence is the strongest privacy statement we can make: we
+          <strong>cannot</strong> see what you read, what you bookmark, when you pray, or where you
+          are, because none of it is ever sent to us.
+        </p>
+        <p>
+          Most of the app also works with no network at all: prayer times can be computed on the
+          device, and adhkar, duas, tasbih, the Hijri calendar and the full Qur'an text are bundled
+          inside the app.
+        </p>
 
-    <h2>طلبات الشبكة الأخرى</h2>
-    <p>لعرض نص القرآن الكريم وتلاوته الصوتية، يجلب التطبيق المحتوى من <code>api.alquran.cloud</code>
-    و<code>cdn.islamic.network</code>. لا تتضمّن هذه الطلبات أي معلومات شخصية عنك.</p>
+        <h2 id="en-3">3. What stays on your device</h2>
+        <p>
+          Rafiq stores its data in a key-value store, a bundled read-only SQLite database for the
+          Qur'an, and its own app-private files directory. All of the following is local and
+          <strong>never uploaded</strong>:
+        </p>
+        <ul>
+          <li>
+            <strong>Settings:</strong> language, theme, calculation method, Asr school, calendar
+            system, reciter, reading mode, translation edition, notification and salawat
+            preferences, haptics.
+          </li>
+          <li>
+            <strong>Your place:</strong> the coordinates and city label you detected or searched for,
+            kept so prayer times work offline and widgets can refresh.
+          </li>
+          <li>
+            <strong>Qur'an reading:</strong> bookmarks, last position for resume, and any mushaf page
+            fonts the app downloaded for offline reading.
+          </li>
+          <li>
+            <strong>Audio:</strong> playback history, bookmarks and where you stopped in a
+            recitation or a collection.
+          </li>
+          <li>
+            <strong>Worship counters:</strong> tasbih programs and counts, adhkar session progress,
+            the salawat counter behind the home widget, and the prayer tracker you tick each day.
+          </li>
+          <li>
+            <strong>Share drafts:</strong> the text or name you type into a greeting or share card,
+            and the images the app renders from them.
+          </li>
+          <li>
+            <strong>A cache of API responses</strong> (prayer times and calendar data) so the app
+            opens instantly and works offline.
+          </li>
+        </ul>
 
-    <h2>تحليلات الاستخدام</h2>
-    <p>لفهم طريقة استخدام رفيق وتحسينه، يجمع التطبيق <strong>تحليلات استخدام مجهولة الهوية
-    ومجمّعة</strong>. تشمل أحداثًا مثل الشاشات التي تفتحها، والميزات التي تستخدمها (مثل تشغيل الصوت
-    أو فتح سورة أو إتمام تسبيح)، وتفضيلاتك الحالية في التطبيق (اللغة، والمظهر، وطريقة الحساب)،
-    إضافةً إلى معلومات أساسية عن الجهاز والجلسة (مثل إصدار التطبيق، ونظام التشغيل، ومُعرّف مجهول
-    يُولَّد عشوائيًا).</p>
-    <p>لا يمكن أن تُعرّف هذه البيانات بك شخصيًا. نحن لا نجمع اسمك أو بريدك الإلكتروني أو جهات
-    اتصالك أو المحتوى الذي تقرؤه أو تكتبه أو تحفظه، و<strong>لا تُرسَل إحداثيات موقعك إلى التحليلات
-    إطلاقًا</strong>. تُعالَج التحليلات نيابةً عنّا بواسطة PostHog، على خوادم في <strong>الاتحاد
-    الأوروبي</strong>.</p>
+        <h2 id="en-4">4. Location, prayer times and the calendar</h2>
+        <p>
+          Location is <strong>optional</strong> and requested only while you are using the app.
+          Rafiq never asks for background location, and there is no location history, no movement
+          profile and no advertising use.
+        </p>
+        <p>When you grant it, your coordinates are used in three ways:</p>
+        <ul>
+          <li>
+            Sent to the <strong>Aladhan API</strong> to calculate prayer times and the monthly
+            prayer and Hijri calendar for your area.
+          </li>
+          <li>
+            Sent to <strong>BigDataCloud</strong> once, to turn the coordinates into a country and
+            city name for display.
+          </li>
+          <li>
+            Used <strong>on the device</strong> to compute prayer times locally with the open-source
+            adhan library, which is what keeps prayer times and home widgets correct while offline.
+          </li>
+        </ul>
+        <p>
+          The coordinates are saved on your device so the app need not ask again. They are not
+          stored by us, not linked to an identity, and <strong>never sent to analytics</strong>.
+        </p>
+        <p>
+          If you deny the permission, you can search for a city by name instead. That search sends
+          the text you typed to <strong>Open-Meteo</strong>'s geocoding service and nothing else.
+        </p>
 
-    <h2>الإشعارات</h2>
-    <p>تُجدوَل تذكيرات مواقيت الصلاة وتُسلَّم بالكامل على جهازك. لا يستخدم التطبيق الإشعارات الفورية
-    عن بُعد، ولا يرسل رمز جهازك إلى أي خادم.</p>
+        <h2 id="en-5">5. Qibla and device sensors</h2>
+        <p>
+          The qibla compass reads your device's magnetometer and accelerometer through the OS while
+          the qibla screen is open, and combines them with your coordinates to draw the direction.
+          <strong>Sensor readings never leave the device</strong>, are not recorded, and are not
+          sent to any API.
+        </p>
+        <p>
+          The app explicitly blocks the physical-activity recognition and microphone permissions at
+          build time, so it cannot detect your movement or listen to anything.
+        </p>
 
-    <h2>خصوصية الأطفال</h2>
-    <p>لا يجمع رفيق عن قصد أي معلومات شخصية من الأطفال، وهو غير موجَّه للأطفال دون سن 13 عامًا.</p>
+        <h2 id="en-6">6. Qur'an text, page fonts and translations</h2>
+        <ul>
+          <li>
+            <strong>The Arabic text ships inside the app</strong> as a read-only database, so reading
+            the Qur'an needs no network and produces no requests.
+          </li>
+          <li>
+            <strong>Mushaf page fonts</strong> for the page-accurate reading mode are downloaded per
+            page from Quran Foundation's font host and cached in the app's own storage. The request
+            contains a page number.
+          </li>
+          <li>
+            <strong>Translations</strong> are fetched from <strong>AlQuran Cloud</strong> by surah
+            and edition identifier.
+          </li>
+          <li>
+            <strong>Word-by-word highlight timings</strong> come from the
+            <strong>Quran.com API</strong>, requested by reciter id and surah number.
+          </li>
+        </ul>
+        <p>None of those requests carries an identifier, an account, or anything about you.</p>
 
-    <h2>خدمات الطرف الثالث</h2>
-    <p>تعالج واجهات الطرف الثالث المذكورة أعلاه الطلبات الموضّحة، ويخضع تعاملها مع طلبات الشبكة
-    لسياسات الخصوصية الخاصة بها:</p>
-    <ul>
-      <li>Aladhan — <a href="https://aladhan.com">aladhan.com</a></li>
-      <li>BigDataCloud — <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy">bigdatacloud.com</a></li>
-      <li>AlQuran Cloud / Islamic Network — <a href="https://alquran.cloud">alquran.cloud</a></li>
-      <li>PostHog (التحليلات) — <a href="https://posthog.com/privacy">posthog.com/privacy</a></li>
-    </ul>
+        <h2 id="en-7">7. Recitation and audio collections</h2>
+        <p>
+          Per-ayah recitation is streamed from <strong>Islamic Network's CDN</strong>, or from
+          <strong>everyayah.com</strong> for the reciters that CDN does not carry. Lecture and
+          nasheed collections, and their cover artwork, are streamed from the
+          <strong>Internet Archive</strong>. Each request asks for a file, and carries nothing about
+          you.
+        </p>
+        <p>
+          Playback continues in the background through a media foreground service, which is why the
+          app declares the media-playback service permissions in section 12. What you listened to,
+          and where you stopped, is written only to your device.
+        </p>
 
-    <h2>التغييرات على هذه السياسة</h2>
-    <p>قد نُحدّث هذه السياسة من وقت لآخر. يعكس تاريخ "آخر تحديث" أعلاه أحدث نسخة.</p>
+        <h2 id="en-8">8. Notifications, exact alarms and widgets</h2>
+        <p>
+          Every notification Rafiq shows is <strong>local</strong>: adhan and pre-adhan reminders,
+          salawat reminders, and the prompts you enable in Settings. They are scheduled on your
+          device from prayer times your device already has.
+        </p>
+        <p>
+          Prayer reminders must fire at an exact minute to be useful, so the app uses Android's
+          exact-alarm permission and reschedules your alarms after a reboot. There is
+          <strong>no push server and no device token</strong>: nothing about you is sent anywhere in
+          order to remind you.
+        </p>
+        <p>
+          Home-screen widgets (next prayer, salawat, the counter, and the combined widget) are drawn
+          by the app on your device from the same local data, on the refresh interval Android gives
+          them.
+        </p>
 
-    <h2>التواصل</h2>
-    <p>لأي أسئلة حول سياسة الخصوصية هذه، يُرجى التواصل عبر: <strong>boogado@yahoo.com</strong></p>
-  </section>
+        <h2 id="en-9">9. Share cards, greetings and QR codes</h2>
+        <p>
+          Rafiq can render a share card, a greeting or an ayah image. The image is composed
+          <strong>on your device</strong>, written to the app's cache directory, and handed to
+          Android's share sheet, so it goes <strong>only where you send it</strong>. We never receive
+          a copy, and from there the receiving app's privacy policy applies.
+        </p>
+        <p>
+          A name or dedication you type into a greeting stays on your device and is only baked into
+          the image you chose to share. The QR code printed on a card encodes the app's
+          <strong>Google Play link</strong>, nothing else: it carries no identifier and cannot be
+          traced back to you.
+        </p>
 
-  <script>
-    function setLang(lang) {
-      var isAr = lang === 'ar';
-      document.getElementById('ar').hidden = !isAr;
-      document.getElementById('en').hidden = isAr;
-      document.getElementById('btn-ar').classList.toggle('active', isAr);
-      document.getElementById('btn-en').classList.toggle('active', !isAr);
-      document.documentElement.lang = lang;
-      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
-    }
-    // Default to Arabic for Arabic-locale browsers, English otherwise.
-    if ((navigator.language || '').toLowerCase().indexOf('ar') === 0) setLang('ar');
-  </script>
-</body>
+        <h2 id="en-10">10. Analytics and crash reporting</h2>
+        <p>
+          To see which screens and features are actually used and where the app crashes, Rafiq sends
+          usage events to <strong>PostHog</strong> (EU region) and to
+          <strong>Expo EAS Observe</strong>, which also collects startup and navigation performance.
+        </p>
+        <h3>What is sent</h3>
+        <ul>
+          <li>
+            Event names from a fixed list defined in the app's source, for example
+            <code>screen_view</code>, <code>quran_surah_opened</code>, <code>audio_started</code>,
+            <code>tasbih_completed</code>, <code>bookmark_toggled</code>,
+            <code>qibla_aligned</code>, <code>theme_changed</code>,
+            <code>notifications_scheduled</code>.
+          </li>
+          <li>
+            Low-cardinality properties beside the event: a surah or reciter identifier, a category
+            name, counts, enums and booleans. A search event carries the
+            <strong>scope and the number of results, never the text you typed</strong>. A location
+            event carries only whether the place came from GPS or from a search.
+          </li>
+          <li>
+            Your current app preferences as profile traits: language, theme, calculation method and
+            similar settings, so usage can be broken down by them.
+          </li>
+          <li>
+            Technical context: app version, platform and OS version, device model, launch and
+            navigation timings.
+          </li>
+          <li>
+            Errors: uncaught JavaScript exceptions, unhandled promise rejections and errors caught by
+            the app's own boundaries, with stack traces.
+          </li>
+          <li>
+            An identifier that is <strong>random and generated on your device</strong>. Since Rafiq
+            has no accounts, there is nothing to attach it to: no name, no email, no phone number, no
+            advertising id.
+          </li>
+        </ul>
+        <h3>What is never sent</h3>
+        <ul>
+          <li>Your coordinates or city, in any event or property.</li>
+          <li>
+            Anything you read, type, bookmark or dedicate: search text, greeting names, bookmark
+            contents, notes.
+          </li>
+          <li>Your name, email address, contacts or installed-app list.</li>
+          <li>
+            No session replay, no screen recording, no keystroke capture, no advertising identifier,
+            and no advertising or attribution SDK. The app contains none.
+          </li>
+        </ul>
+        <div class="note">
+          <p>
+            This version has no in-app switch to turn analytics off. If you want yours stopped or
+            deleted, email the address in section 19 and it will be done.
+          </p>
+        </div>
+
+        <h2 id="en-11">11. App updates and rating</h2>
+        <ul>
+          <li>
+            <strong>Over-the-air updates:</strong> the app can fetch a JavaScript update from Expo's
+            update service. The request carries the app version, the release channel, the runtime
+            version and the platform, and nothing personal.
+          </li>
+          <li>
+            <strong>Store updates:</strong> when a new version is on Google Play, the app can show
+            Play's own in-app update prompt. That exchange is between your device and Google Play.
+          </li>
+          <li>
+            <strong>Rating:</strong> the rate action opens Google Play's rating dialog. We never see
+            more than the public review anyone can read.
+          </li>
+        </ul>
+
+        <h2 id="en-12">12. Android permissions</h2>
+        <div class="table-scroll">
+          <table>
+            <caption>Every permission the Google Play build declares, and why</caption>
+            <thead>
+              <tr>
+                <th scope="col">Permission</th>
+                <th scope="col">Asked?</th>
+                <th scope="col">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Location, coarse and fine</td>
+                <td>Asked</td>
+                <td>Prayer times and qibla for where you are. Foreground only</td>
+              </tr>
+              <tr>
+                <td>Notifications</td>
+                <td>Asked</td>
+                <td>Adhan, pre-adhan and salawat reminders</td>
+              </tr>
+              <tr>
+                <td>Exact alarms</td>
+                <td>Automatic</td>
+                <td>
+                  Firing a prayer reminder at the exact minute rather than whenever Android feels
+                  like it
+                </td>
+              </tr>
+              <tr>
+                <td>Foreground service, media playback</td>
+                <td>Automatic</td>
+                <td>Keeping recitation and lectures playing when you leave the app</td>
+              </tr>
+              <tr>
+                <td>Modify audio settings</td>
+                <td>Automatic</td>
+                <td>Handling audio focus, so playback ducks and resumes correctly</td>
+              </tr>
+              <tr>
+                <td>Internet, network state, Wi-Fi state</td>
+                <td>Automatic</td>
+                <td>Fetching prayer times, Qur'an audio and translations, and detecting offline</td>
+              </tr>
+              <tr>
+                <td>Vibrate</td>
+                <td>Automatic</td>
+                <td>Haptic feedback on counters and taps</td>
+              </tr>
+              <tr>
+                <td>Wake lock</td>
+                <td>Automatic</td>
+                <td>Finishing a scheduled notification or an audio handoff before the device sleeps</td>
+              </tr>
+              <tr>
+                <td>Run after restart</td>
+                <td>Automatic</td>
+                <td>Rescheduling your prayer alarms after a reboot</td>
+              </tr>
+              <tr>
+                <td>Read and write storage (Android 12 and earlier)</td>
+                <td>Legacy</td>
+                <td>Old-Android file access inside libraries we depend on</td>
+              </tr>
+              <tr>
+                <td>Launcher badge permissions</td>
+                <td>Automatic</td>
+                <td>Drawing a count on the app icon on launchers that support it. Cosmetic only</td>
+              </tr>
+              <tr>
+                <td>Draw over other apps</td>
+                <td>Never used</td>
+                <td>
+                  Declared by the React Native tooling the app is built with. Rafiq draws no overlay,
+                  and Android grants this only if you switch it on yourself in system settings
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <p>
+            That is the complete list. Rafiq does not request the microphone, the camera, contacts,
+            SMS, call logs, your photo library, your installed-app list, physical-activity
+            recognition, or background location. The microphone and activity-recognition permissions
+            that arrived through libraries are explicitly stripped from the manifest at build time.
+          </p>
+        </div>
+
+        <h2 id="en-13">13. How we secure data</h2>
+        <p>
+          What is not collected cannot leak. That is Rafiq's first security measure: no account, no
+          password, no server, and no central database of users to breach. Beyond that:
+        </p>
+        <ul>
+          <li>
+            All network traffic uses <strong>HTTPS with certificate validation</strong>, and the
+            release build permits no cleartext traffic.
+          </li>
+          <li>
+            Your settings, bookmarks, counters and downloaded fonts live in
+            <strong>app-private storage</strong> that Android isolates from other apps.
+          </li>
+          <li>
+            The app ships no secret keys, because every source it uses is a free public API. There is
+            nothing in the package worth stealing.
+          </li>
+          <li>Permissions are kept to the minimum, and unused ones are stripped (section 12).</li>
+        </ul>
+        <p>
+          Nobody, including the developer, can read your bookmarks or your prayer tracker remotely.
+          If you find a vulnerability, email us before disclosing it publicly.
+        </p>
+
+        <h2 id="en-14">14. Retention and deletion</h2>
+        <ul>
+          <li>
+            <strong>On-device data</strong> is kept until you delete it in the app, uninstall, or
+            clear the app's storage in Android settings. Any of those removes it permanently.
+          </li>
+          <li>
+            <strong>There is no account to delete</strong> and no copy of your content with us, so
+            there is nothing to request.
+          </li>
+          <li>
+            <strong>Analytics events</strong> are held by PostHog and Expo under their own retention
+            windows, keyed to the random per-install identifier from section 10, and deleted on
+            request.
+          </li>
+          <li>
+            <strong>Images you shared</strong> live wherever you sent them, so delete them from that
+            destination.
+          </li>
+        </ul>
+
+        <h2 id="en-15">15. Your rights</h2>
+        <p>
+          If you are in the EU, the UK, or California, you have rights of access, correction,
+          deletion and objection. In practice:
+        </p>
+        <ul>
+          <li>
+            Everything the app knows about you is on your device, under your direct control, and you
+            can inspect or wipe it without asking anyone.
+          </li>
+          <li>
+            We do not sell your data, do not share it for advertising, and do not build advertising
+            profiles from it.
+          </li>
+          <li>
+            The legal basis for the anonymous analytics in section 10 is our legitimate interest in
+            keeping the app working and improving it. Email us to have yours deleted.
+          </li>
+        </ul>
+
+        <h2 id="en-16">16. Children's privacy</h2>
+        <p>
+          Rafiq is not directed at children under 13 and does not knowingly collect personal
+          information from them. It has no accounts, no chat, no user-generated content and no ads,
+          so there is nothing for a child to submit to us.
+        </p>
+
+        <h2 id="en-17">17. Third-party services</h2>
+        <p>
+          These are every service your device contacts, and what it sends. Their own privacy policies
+          govern what they do with a request:
+        </p>
+        <div class="table-scroll">
+          <table>
+            <caption>Services the app contacts and what each one receives</caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Purpose</th>
+                <th scope="col">What is sent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="https://aladhan.com" rel="noopener">Aladhan</a></td>
+                <td>Prayer times and the monthly prayer and Hijri calendar</td>
+                <td>Coordinates, date, calculation method</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy" rel="noopener"
+                    >BigDataCloud</a
+                  >
+                </td>
+                <td>Turning coordinates into a city name</td>
+                <td>Coordinates, only with your permission</td>
+              </tr>
+              <tr>
+                <td><a href="https://open-meteo.com/en/terms" rel="noopener">Open-Meteo</a></td>
+                <td>Searching for a city by name</td>
+                <td>The city text you typed</td>
+              </tr>
+              <tr>
+                <td><a href="https://alquran.cloud" rel="noopener">AlQuran Cloud</a></td>
+                <td>Qur'an translations</td>
+                <td>Surah number and edition id</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://quran.foundation/privacy" rel="noopener">Quran Foundation</a>
+                  (<code>api.quran.com</code>, mushaf fonts)
+                </td>
+                <td>Word-by-word timings and mushaf page fonts</td>
+                <td>Reciter id, surah number, page number</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://islamic.network" rel="noopener">Islamic Network CDN</a> and
+                  <a href="https://everyayah.com" rel="noopener">everyayah.com</a>
+                </td>
+                <td>Per-ayah recitation audio</td>
+                <td>The audio file path requested</td>
+              </tr>
+              <tr>
+                <td><a href="https://archive.org/about/terms" rel="noopener">Internet Archive</a></td>
+                <td>Audio collections and cover artwork</td>
+                <td>The item and file requested</td>
+              </tr>
+              <tr>
+                <td><a href="https://posthog.com/privacy" rel="noopener">PostHog</a></td>
+                <td>Usage analytics and error tracking, EU region</td>
+                <td>A random id, event names, app preferences, stack traces</td>
+              </tr>
+              <tr>
+                <td><a href="https://expo.dev/privacy" rel="noopener">Expo</a></td>
+                <td>Over-the-air updates and performance metrics</td>
+                <td>App version, channel, platform, device model, timings</td>
+              </tr>
+              <tr>
+                <td><a href="https://policies.google.com/privacy" rel="noopener">Google Play</a></td>
+                <td>Distribution, in-app updates, the rating dialog</td>
+                <td>Whatever Play needs for a download or an update, on your request</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          There is no advertising network, no attribution SDK and no data broker in this list, and
+          none in the app.
+        </p>
+
+        <h2 id="en-18">18. Changes to this policy</h2>
+        <p>
+          We update this page whenever a feature or a data source changes. The date at the top
+          reflects the current version, the full history is public in this page's GitHub repository,
+          and material changes are called out in the app's release notes.
+        </p>
+
+        <h2 id="en-19">19. Contact</h2>
+        <div class="contact">
+          <p>
+            For any privacy question, or to have your analytics data deleted:
+            <a href="mailto:boogado@yahoo.com">boogado@yahoo.com</a>
+          </p>
+          <p>Developer: Mohamed Gado · App: Rafiq (<code>com.mohamedgado.rafiq</code>)</p>
+        </div>
+
+        <footer class="page">
+          <p>
+            This page is static and hosted on GitHub Pages. It sets no cookies, runs no analytics,
+            and loads no fonts or scripts from other servers.
+          </p>
+        </footer>
+      </section>
+
+      <!-- ================================ ARABIC ================================ -->
+      <section id="doc-ar" lang="ar" dir="rtl" class="lang-hidden">
+        <h1>سياسة الخصوصية لتطبيق رفيق</h1>
+        <p class="lede">
+          رفيق تطبيق إسلامي هادئ: مواقيت الصلاة وتنبيهات الأذان، والقبلة، والقرآن الكريم مع التلاوة،
+          والأذكار والتسبيح، والأدعية، والتقويم الهجري، والمكتبة الصوتية، وودجات الشاشة الرئيسية،
+          وبطاقات المشاركة. ليس فيه حسابات ولا خادم يملكه. توضّح هذه الصفحة ما يبقى على جهازك، وما
+          يغادره، وإلى مَن.
+        </p>
+        <p class="meta">
+          آخر تحديث: <b><time datetime="2026-07-27">٢٧ يوليو ٢٠٢٦</time></b> · تغطي الإصدار
+          <b>1.48.1</b> وما بعده · معرّف الحزمة <code>com.mohamedgado.rafiq</code>
+        </p>
+
+        <div class="glance">
+          <div class="tile lead">
+            <h2>باختصار</h2>
+            <p>
+              لا حسابات، ولا إعلانات، ولا بيع بيانات، ولا خادم يملكه رفيق. إعداداتك وعلاماتك المرجعية
+              وتقدّم القراءة وعدّادات التسبيح والأذكار ومتابعة الصلاة وسجل الصوت تبقى
+              <strong>على جهازك فقط</strong>. ويتصل التطبيق بواجهات إسلامية وخرائطية عامة لجلب
+              المحتوى، ويرسل أحداث استخدام مجهولة الهوية لتحسين نفسه.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>الموقع اختياري</h2>
+            <p>
+              يُستخدم لحساب مواقيت الصلاة والقبلة في مكانك، وأثناء فتح التطبيق فقط. وإن رفضتَه فابحث
+              عن مدينتك بالاسم.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>ما تكتبه لا يُجمَع</h2>
+            <p>
+              نص البحث والعلامات المرجعية وأسماء التهاني وما تقرأه لا يذهب إلى القياسات، وكذلك
+              إحداثياتك لا تذهب إليها أبدًا.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>التنبيهات محلية</h2>
+            <p>
+              تنبيهات الأذان وما قبله والصلاة على النبي ﷺ تُجدوَل على الجهاز. لا خادم دفع، ولا رمز
+              جهاز، ولا رسالة منّا.
+            </p>
+          </div>
+          <div class="tile">
+            <h2>حذف التطبيق هو زر المحو</h2>
+            <p>
+              لا يوجد حساب لتحذفه ولا نسخة من بياناتك لدينا. وإزالة التطبيق تمحو كل ما خزّنه.
+            </p>
+          </div>
+        </div>
+
+        <nav class="toc" aria-label="محتويات الصفحة">
+          <h2>المحتويات</h2>
+          <ol>
+            <li><a href="#ar-1">من نحن ونطاق السياسة</a></li>
+            <li><a href="#ar-2">لا حسابات ولا خادم لنا</a></li>
+            <li><a href="#ar-3">ما يبقى على جهازك</a></li>
+            <li><a href="#ar-4">الموقع ومواقيت الصلاة والتقويم</a></li>
+            <li><a href="#ar-5">القبلة ومستشعرات الجهاز</a></li>
+            <li><a href="#ar-6">نص القرآن وخطوط المصحف والترجمات</a></li>
+            <li><a href="#ar-7">التلاوة والمكتبة الصوتية</a></li>
+            <li><a href="#ar-8">الإشعارات والمنبّهات الدقيقة والودجات</a></li>
+            <li><a href="#ar-9">بطاقات المشاركة والتهاني ورمز QR</a></li>
+            <li><a href="#ar-10">قياسات الاستخدام وتقارير الأعطال</a></li>
+            <li><a href="#ar-11">التحديثات والتقييم</a></li>
+            <li><a href="#ar-12">أذونات أندرويد</a></li>
+            <li><a href="#ar-13">تأمين البيانات</a></li>
+            <li><a href="#ar-14">الاحتفاظ بالبيانات وحذفها</a></li>
+            <li><a href="#ar-15">حقوقك</a></li>
+            <li><a href="#ar-16">خصوصية الأطفال</a></li>
+            <li><a href="#ar-17">خدمات الغير</a></li>
+            <li><a href="#ar-18">تعديلات السياسة</a></li>
+            <li><a href="#ar-19">التواصل</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="ar-1">١. من نحن ونطاق السياسة</h2>
+        <p>
+          رفيق (<code>com.mohamedgado.rafiq</code>) يطوّره ويشغّله فرد واحد: محمد جادو. تغطي هذه
+          السياسة تطبيق رفيق على أندرويد، وأي إصدار مستقبلي على iOS، وتغطي كذلك هذه الصفحة نفسها.
+          الصفحة لا تضع كوكيز ولا تحمّل أي ملف من خادم آخر.
+        </p>
+        <p>
+          يمكنك فتح هذه السياسة من داخل التطبيق في أي وقت: <strong>الإعدادات ← سياسة الخصوصية</strong>.
+        </p>
+
+        <h2 id="ar-2">٢. لا حسابات ولا خادم لنا</h2>
+        <p>
+          لا تسجيل ولا دخول ولا ملف شخصي ولا مزامنة. رفيق <strong>لا يشغّل أي خادم</strong>: كل مصادر
+          بياناته واجهات عامة يديرها غيرنا، وجهازك يتصل بها مباشرة. لا توجد قاعدة بيانات لنا فيها
+          مستخدمون، لأنه لا توجد قاعدة بيانات لنا من الأصل.
+        </p>
+        <p>
+          والنتيجة العملية هي أقوى ما نستطيع قوله عن الخصوصية: <strong>لا نستطيع</strong> أن نرى ما
+          تقرأه، ولا ما تحفظه، ولا مواعيد صلاتك، ولا مكانك، لأن شيئًا من ذلك لا يُرسل إلينا إطلاقًا.
+        </p>
+        <p>
+          ومعظم التطبيق يعمل كذلك بلا إنترنت: مواقيت الصلاة يمكن حسابها على الجهاز، والأذكار والأدعية
+          والتسبيح والتقويم الهجري ونص القرآن الكريم كامل مضمَّنة داخل التطبيق.
+        </p>
+
+        <h2 id="ar-3">٣. ما يبقى على جهازك</h2>
+        <p>
+          يخزّن رفيق بياناته في مخزن مفاتيح وقيم، وقاعدة بيانات SQLite مضمَّنة للقراءة فقط للقرآن،
+          ومجلد ملفات خاص بالتطبيق. وكل ما يلي محلي و<strong>لا يُرفع أبدًا</strong>:
+        </p>
+        <ul>
+          <li>
+            <strong>الإعدادات:</strong> اللغة، والسمة، وطريقة الحساب، ومذهب العصر، ونظام التقويم،
+            والقارئ، ونمط القراءة، ونسخة الترجمة، وتفضيلات الإشعارات والصلاة على النبي ﷺ، والاهتزاز.
+          </li>
+          <li>
+            <strong>مكانك:</strong> الإحداثيات واسم المدينة الذي حدّدته أو بحثت عنه، محفوظة لتعمل
+            المواقيت بلا اتصال وتتحدّث الودجات.
+          </li>
+          <li>
+            <strong>قراءة القرآن:</strong> العلامات المرجعية، وآخر موضع للمتابعة، وأي خطوط صفحات مصحف
+            نزّلها التطبيق للقراءة بلا اتصال.
+          </li>
+          <li>
+            <strong>الصوت:</strong> سجل التشغيل، والعلامات المرجعية، وموضع التوقّف في تلاوة أو مجموعة.
+          </li>
+          <li>
+            <strong>عدّادات العبادة:</strong> برامج التسبيح وأعداده، وتقدّم جلسات الأذكار، وعدّاد
+            الصلاة على النبي ﷺ خلف الودجة، ومتابعة الصلوات التي تعلّمها كل يوم.
+          </li>
+          <li>
+            <strong>مسوّدات المشاركة:</strong> النص أو الاسم الذي تكتبه في تهنئة أو بطاقة، والصور التي
+            يرسمها التطبيق منها.
+          </li>
+          <li>
+            <strong>ذاكرة مؤقتة لردود الواجهات</strong> (المواقيت وبيانات التقويم) ليفتح التطبيق
+            فورًا ويعمل بلا اتصال.
+          </li>
+        </ul>
+
+        <h2 id="ar-4">٤. الموقع ومواقيت الصلاة والتقويم</h2>
+        <p>
+          إذن الموقع <strong>اختياري</strong> ويُطلب فقط أثناء استخدامك للتطبيق. ورفيق لا يطلب الموقع
+          في الخلفية أبدًا، ولا يوجد سجل مواقع ولا ملف تحرّكات ولا أي استخدام إعلاني.
+        </p>
+        <p>وعند منحك الإذن تُستخدم إحداثياتك في ثلاثة أوجه:</p>
+        <ul>
+          <li>
+            تُرسل إلى <strong>واجهة Aladhan</strong> لحساب مواقيت الصلاة والتقويم الشهري للمواقيت
+            والتاريخ الهجري لمنطقتك.
+          </li>
+          <li>
+            تُرسل إلى <strong>BigDataCloud</strong> مرة واحدة لتحويل الإحداثيات إلى اسم دولة ومدينة
+            للعرض.
+          </li>
+          <li>
+            تُستخدم <strong>على الجهاز</strong> لحساب المواقيت محليًا عبر مكتبة adhan مفتوحة المصدر،
+            وهذا ما يجعل المواقيت والودجات صحيحة بلا اتصال.
+          </li>
+        </ul>
+        <p>
+          وتُحفظ الإحداثيات على جهازك كي لا يسأل التطبيق مرة أخرى. ولا نخزّنها نحن، ولا تُربط بهوية،
+          و<strong>لا تُرسل إلى القياسات أبدًا</strong>.
+        </p>
+        <p>
+          وإن رفضت الإذن فيمكنك البحث عن مدينة بالاسم، ويرسل هذا البحث النص الذي كتبته إلى خدمة البحث
+          الجغرافي في <strong>Open-Meteo</strong> ولا شيء غيره.
+        </p>
+
+        <h2 id="ar-5">٥. القبلة ومستشعرات الجهاز</h2>
+        <p>
+          تقرأ بوصلة القبلة مستشعر المجال المغناطيسي ومقياس التسارع في جهازك عبر النظام أثناء فتح شاشة
+          القبلة، وتدمجهما مع إحداثياتك لرسم الاتجاه.
+          <strong>قراءات المستشعرات لا تغادر الجهاز</strong> ولا تُسجَّل ولا تُرسل إلى أي واجهة.
+        </p>
+        <p>
+          ويحجب التطبيق صراحةً إذن تتبّع النشاط البدني وإذن الميكروفون وقت البناء، فلا يستطيع رصد
+          حركتك ولا الاستماع إلى أي شيء.
+        </p>
+
+        <h2 id="ar-6">٦. نص القرآن وخطوط المصحف والترجمات</h2>
+        <ul>
+          <li>
+            <strong>النص العربي مضمَّن داخل التطبيق</strong> كقاعدة بيانات للقراءة فقط، فقراءة القرآن
+            لا تحتاج شبكة ولا تُنتج أي طلب.
+          </li>
+          <li>
+            <strong>خطوط صفحات المصحف</strong> لنمط القراءة المطابق للصفحة تُنزَّل صفحةً صفحةً من مضيف
+            خطوط مؤسسة القرآن وتُحفظ في مخزن التطبيق. ويحمل الطلب رقم صفحة.
+          </li>
+          <li>
+            <strong>الترجمات</strong> تُجلب من <strong>AlQuran Cloud</strong> برقم السورة ومعرّف
+            النسخة.
+          </li>
+          <li>
+            <strong>توقيتات إبراز الكلمات</strong> تأتي من <strong>واجهة Quran.com</strong>، وتُطلب
+            بمعرّف القارئ ورقم السورة.
+          </li>
+        </ul>
+        <p>ولا يحمل أي من هذه الطلبات معرّفًا ولا حسابًا ولا أي شيء عنك.</p>
+
+        <h2 id="ar-7">٧. التلاوة والمكتبة الصوتية</h2>
+        <p>
+          تلاوة الآية تُبَثّ من <strong>شبكة Islamic Network</strong>، أو من
+          <strong>everyayah.com</strong> للقرّاء الذين لا تحملهم تلك الشبكة. والمحاضرات والأناشيد
+          وصورها تُبَثّ من <strong>أرشيف الإنترنت</strong>. وكل طلب يسأل عن ملف، ولا يحمل شيئًا عنك.
+        </p>
+        <p>
+          ويستمر التشغيل في الخلفية عبر خدمة وسائط في المقدمة، ولهذا يُعلن التطبيق أذونات خدمة الوسائط
+          في القسم ١٢. وما سمعتَه وموضع توقّفك يُكتبان على جهازك فقط.
+        </p>
+
+        <h2 id="ar-8">٨. الإشعارات والمنبّهات الدقيقة والودجات</h2>
+        <p>
+          كل إشعار يعرضه رفيق <strong>محلي</strong>: تنبيهات الأذان وما قبله، وتنبيهات الصلاة على
+          النبي ﷺ، والتنبيهات التي تفعّلها من الإعدادات. وتُجدوَل على جهازك من مواقيت موجودة عليه
+          بالفعل.
+        </p>
+        <p>
+          وتنبيه الصلاة يجب أن يطلق في دقيقته بالضبط ليكون نافعًا، لذا يستخدم التطبيق إذن المنبّه
+          الدقيق في أندرويد ويعيد جدولة منبّهاتك بعد إعادة التشغيل. و<strong>لا يوجد خادم دفع ولا رمز
+          جهاز</strong>: لا يُرسل شيء عنك إلى أي مكان من أجل تذكيرك.
+        </p>
+        <p>
+          وودجات الشاشة الرئيسية (الصلاة القادمة، والصلاة على النبي ﷺ، والعدّاد، والودجة المدمجة)
+          يرسمها التطبيق على جهازك من البيانات المحلية نفسها، وفق فترة التحديث التي يمنحها أندرويد.
+        </p>
+
+        <h2 id="ar-9">٩. بطاقات المشاركة والتهاني ورمز QR</h2>
+        <p>
+          يستطيع رفيق رسم بطاقة مشاركة أو تهنئة أو صورة آية. وتُركَّب الصورة
+          <strong>على جهازك</strong>، وتُكتب في مجلد التخزين المؤقت للتطبيق، ثم تُسلَّم لقائمة
+          المشاركة في أندرويد، فتذهب <strong>حيث ترسلها أنت فقط</strong>. نحن لا نستلم نسخة، وبعد ذلك
+          تحكمها سياسة التطبيق المستقبِل.
+        </p>
+        <p>
+          والاسم أو الإهداء الذي تكتبه في التهنئة يبقى على جهازك، ولا يظهر إلا داخل الصورة التي اخترت
+          مشاركتها. ورمز QR المطبوع على البطاقة يحمل <strong>رابط التطبيق على جوجل بلاي</strong> ولا
+          شيء غيره: لا يحمل أي معرّف ولا يمكن تتبّعه إليك.
+        </p>
+
+        <h2 id="ar-10">١٠. قياسات الاستخدام وتقارير الأعطال</h2>
+        <p>
+          لمعرفة الشاشات والميزات المستخدمة فعلًا وأين يتعطّل التطبيق، يرسل رفيق أحداث استخدام إلى
+          <strong>PostHog</strong> (منطقة الاتحاد الأوروبي) وإلى <strong>EAS Observe</strong> من Expo
+          التي تجمع كذلك مقاييس الإقلاع والتنقّل.
+        </p>
+        <h3>ما يُرسل</h3>
+        <ul>
+          <li>
+            أسماء أحداث من قائمة ثابتة معرّفة في كود التطبيق، مثل <code>screen_view</code> و
+            <code>quran_surah_opened</code> و <code>audio_started</code> و
+            <code>tasbih_completed</code> و <code>bookmark_toggled</code> و
+            <code>qibla_aligned</code> و <code>theme_changed</code> و
+            <code>notifications_scheduled</code>.
+          </li>
+          <li>
+            خصائص منخفضة التنوّع مع الحدث: معرّف سورة أو قارئ، واسم قسم، وأعداد وقيم محدّدة ومنطقية.
+            وحدث البحث يحمل <strong>النطاق وعدد النتائج، لا النص الذي كتبته</strong>. وحدث الموقع يحمل
+            فقط ما إذا كان المكان من GPS أو من بحث.
+          </li>
+          <li>
+            تفضيلاتك الحالية كخصائص ملف: اللغة والسمة وطريقة الحساب وما شابه، لتحليل الاستخدام
+            بحسبها.
+          </li>
+          <li>سياق تقني: إصدار التطبيق والمنصّة وإصدار النظام وطراز الجهاز وأزمنة الإقلاع والتنقّل.</li>
+          <li>
+            الأخطاء: استثناءات JavaScript غير المعالَجة، ورفض الوعود، والأخطاء التي تلتقطها حدود
+            التطبيق، مع أثر التنفيذ.
+          </li>
+          <li>
+            معرّف <strong>عشوائي يُولَّد على جهازك</strong>. ولأن رفيق بلا حسابات فلا يوجد ما يُربط
+            به: لا اسم، ولا بريد، ولا رقم هاتف، ولا معرّف إعلاني.
+          </li>
+        </ul>
+        <h3>ما لا يُرسل أبدًا</h3>
+        <ul>
+          <li>إحداثياتك أو مدينتك، في أي حدث أو خاصية.</li>
+          <li>
+            أي شيء تقرأه أو تكتبه أو تحفظه أو تُهديه: نص البحث، وأسماء التهاني، ومحتوى العلامات
+            المرجعية، والملاحظات.
+          </li>
+          <li>اسمك أو بريدك أو جهات اتصالك أو قائمة تطبيقاتك.</li>
+          <li>
+            لا تسجيل للجلسة، ولا تسجيل للشاشة، ولا التقاط لما تكتبه، ولا معرّف إعلاني، ولا أي حزمة
+            إعلانات أو إحالة. التطبيق لا يحتوي أيًّا منها.
+          </li>
+        </ul>
+        <div class="note">
+          <p>
+            لا يوجد في هذا الإصدار مفتاح داخلي لإيقاف القياسات. إن رغبت في إيقافها أو حذف بياناتك،
+            راسلنا على البريد في القسم ١٩ وسننفّذ ذلك.
+          </p>
+        </div>
+
+        <h2 id="ar-11">١١. التحديثات والتقييم</h2>
+        <ul>
+          <li>
+            <strong>التحديثات الفورية:</strong> يمكن للتطبيق جلب تحديث JavaScript من خدمة تحديثات
+            Expo. ويحمل الطلب إصدار التطبيق وقناة الإصدار وإصدار وقت التشغيل والمنصّة، ولا شيء شخصيًا.
+          </li>
+          <li>
+            <strong>تحديثات المتجر:</strong> عند وجود إصدار جديد على جوجل بلاي يمكن للتطبيق عرض نافذة
+            التحديث الخاصة ببلاي. وهذا تبادل بين جهازك وجوجل بلاي.
+          </li>
+          <li>
+            <strong>التقييم:</strong> يفتح زر التقييم نافذة التقييم الخاصة بجوجل بلاي، ولا نرى أكثر
+            من التقييم العام الذي يراه الجميع.
+          </li>
+        </ul>
+
+        <h2 id="ar-12">١٢. أذونات أندرويد</h2>
+        <div class="table-scroll">
+          <table>
+            <caption>كل إذن تُعلنه نسخة جوجل بلاي، وسببه</caption>
+            <thead>
+              <tr>
+                <th scope="col">الإذن</th>
+                <th scope="col">يُطلب منك؟</th>
+                <th scope="col">السبب</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>الموقع، التقريبي والدقيق</td>
+                <td>يُطلب منك</td>
+                <td>مواقيت الصلاة والقبلة في مكانك. أثناء الاستخدام فقط</td>
+              </tr>
+              <tr>
+                <td>الإشعارات</td>
+                <td>يُطلب منك</td>
+                <td>تنبيهات الأذان وما قبله والصلاة على النبي ﷺ</td>
+              </tr>
+              <tr>
+                <td>المنبّهات الدقيقة</td>
+                <td>تلقائي</td>
+                <td>إطلاق تنبيه الصلاة في دقيقته بالضبط، لا وقت ما يشاء النظام</td>
+              </tr>
+              <tr>
+                <td>خدمة في المقدمة لتشغيل الوسائط</td>
+                <td>تلقائي</td>
+                <td>استمرار التلاوة والمحاضرات بعد خروجك من التطبيق</td>
+              </tr>
+              <tr>
+                <td>تعديل إعدادات الصوت</td>
+                <td>تلقائي</td>
+                <td>إدارة تركيز الصوت، ليخفت التشغيل ويعود بشكل صحيح</td>
+              </tr>
+              <tr>
+                <td>الإنترنت وحالة الشبكة والواي فاي</td>
+                <td>تلقائي</td>
+                <td>جلب المواقيت والتلاوة والترجمات، ومعرفة أنك دون اتصال</td>
+              </tr>
+              <tr>
+                <td>الاهتزاز</td>
+                <td>تلقائي</td>
+                <td>الاستجابة اللمسية في العدّادات واللمسات</td>
+              </tr>
+              <tr>
+                <td>إبقاء المعالج مستيقظًا</td>
+                <td>تلقائي</td>
+                <td>إتمام إشعار مجدول أو تسليم صوتي قبل أن ينام الجهاز</td>
+              </tr>
+              <tr>
+                <td>التشغيل بعد إعادة التشغيل</td>
+                <td>تلقائي</td>
+                <td>إعادة جدولة منبّهات الصلاة بعد إعادة تشغيل الجهاز</td>
+              </tr>
+              <tr>
+                <td>قراءة وكتابة التخزين (أندرويد ١٢ فأقل)</td>
+                <td>قديم</td>
+                <td>وصول الملفات في الإصدارات القديمة داخل مكتبات نعتمد عليها</td>
+              </tr>
+              <tr>
+                <td>أذونات شارة المشغّل</td>
+                <td>تلقائي</td>
+                <td>رسم عدد على أيقونة التطبيق في المشغّلات التي تدعمه. شكلي فقط</td>
+              </tr>
+              <tr>
+                <td>الرسم فوق التطبيقات الأخرى</td>
+                <td>غير مستخدم</td>
+                <td>
+                  تُعلنه أدوات React Native التي بُني بها التطبيق. رفيق لا يرسم أي طبقة فوق غيره،
+                  وأندرويد لا يمنح هذا الإذن إلا إذا فعّلتَه بنفسك من إعدادات النظام
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <p>
+            هذه هي القائمة الكاملة. لا يطلب رفيق الميكروفون ولا الكاميرا ولا جهات الاتصال ولا الرسائل
+            ولا سجل المكالمات ولا مكتبة صورك ولا قائمة تطبيقاتك ولا تتبّع النشاط البدني ولا الموقع في
+            الخلفية. وإذنا الميكروفون وتتبّع النشاط اللذان دخلا مع المكتبات يُزالان صراحةً من ملف
+            البيان وقت البناء.
+          </p>
+        </div>
+
+        <h2 id="ar-13">١٣. تأمين البيانات</h2>
+        <p>
+          ما لا يُجمع لا يمكن أن يُسرَّب. هذا أول إجراء أمني في رفيق: لا حساب، ولا كلمة مرور، ولا
+          خادم، ولا قاعدة بيانات مركزية للمستخدمين يمكن اختراقها. وإضافة إلى ذلك:
+        </p>
+        <ul>
+          <li>
+            كل حركة الشبكة تجري عبر <strong>HTTPS مع التحقق من الشهادات</strong>، ونسخة الإنتاج لا
+            تسمح بأي اتصال غير مشفّر.
+          </li>
+          <li>
+            إعداداتك وعلاماتك وعدّاداتك والخطوط المنزّلة توجد في
+            <strong>تخزين خاص بالتطبيق</strong> يعزله أندرويد عن بقية التطبيقات.
+          </li>
+          <li>
+            لا يحتوي التطبيق أي مفاتيح سرّية، لأن كل مصادره واجهات عامة مجانية. فلا يوجد ما يُسرق من
+            داخل الحزمة.
+          </li>
+          <li>الأذونات مقصورة على أقل ما يلزم، وغير المستخدَم منها يُزال (القسم ١٢).</li>
+        </ul>
+        <p>
+          لا يمكن لأي شخص، بمن فيهم المطوّر، الاطلاع عن بُعد على علاماتك المرجعية أو متابعة صلاتك. وإن
+          وجدت ثغرة أمنية، راسلنا قبل نشرها.
+        </p>
+
+        <h2 id="ar-14">١٤. الاحتفاظ بالبيانات وحذفها</h2>
+        <ul>
+          <li>
+            <strong>بيانات الجهاز</strong> تبقى حتى تحذفها من التطبيق، أو تحذف التطبيق، أو تمسح
+            بياناته من إعدادات أندرويد. وأيٌّ من ذلك يمحوها نهائيًا.
+          </li>
+          <li>
+            <strong>لا يوجد حساب لتحذفه</strong> ولا نسخة من محتواك لدينا، فلا يوجد ما تطلبه.
+          </li>
+          <li>
+            <strong>أحداث القياس</strong> تحتفظ بها PostHog وExpo وفق سياساتهما، مرتبطة بالمعرّف
+            العشوائي المذكور في القسم ١٠، وتُحذف بناءً على طلبك.
+          </li>
+          <li>
+            <strong>الصور التي شاركتَها</strong> توجد حيث أرسلتَها، فاحذفها من مكانها.
+          </li>
+        </ul>
+
+        <h2 id="ar-15">١٥. حقوقك</h2>
+        <p>
+          إن كنت في الاتحاد الأوروبي أو المملكة المتحدة أو كاليفورنيا، فلك حقوق الوصول والتصحيح
+          والحذف والاعتراض. عمليًا:
+        </p>
+        <ul>
+          <li>
+            كل ما يعرفه التطبيق عنك موجود على جهازك وتحت سيطرتك المباشرة، ويمكنك مراجعته أو محوه بلا
+            استئذان أحد.
+          </li>
+          <li>لا نبيع بياناتك، ولا نشاركها لأغراض إعلانية، ولا نبني منها ملفات إعلانية.</li>
+          <li>
+            الأساس القانوني للقياسات المجهولة في القسم ١٠ هو مصلحتنا المشروعة في إبقاء التطبيق عاملًا
+            وتحسينه. وراسلنا لحذف بياناتك.
+          </li>
+        </ul>
+
+        <h2 id="ar-16">١٦. خصوصية الأطفال</h2>
+        <p>
+          رفيق غير موجَّه للأطفال دون ١٣ عامًا، ولا يجمع عن قصد أي معلومات شخصية منهم. وهو بلا حسابات
+          وبلا محادثات وبلا محتوى ينشره المستخدمون وبلا إعلانات، فلا يوجد ما يرسله طفل إلينا.
+        </p>
+
+        <h2 id="ar-17">١٧. خدمات الغير</h2>
+        <p>
+          هذه كل الخدمات التي يتصل بها جهازك، وما يُرسل إليها. ويحكم تعاملها مع الطلب سياسة الخصوصية
+          الخاصة بها:
+        </p>
+        <div class="table-scroll">
+          <table>
+            <caption>الخدمات التي يتصل بها التطبيق وما تستلمه كل واحدة</caption>
+            <thead>
+              <tr>
+                <th scope="col">الخدمة</th>
+                <th scope="col">الغرض</th>
+                <th scope="col">ما يُرسل</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="https://aladhan.com" rel="noopener">Aladhan</a></td>
+                <td>مواقيت الصلاة والتقويم الشهري للمواقيت والتاريخ الهجري</td>
+                <td>الإحداثيات والتاريخ وطريقة الحساب</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://www.bigdatacloud.com/privacy-and-cookie-policy" rel="noopener"
+                    >BigDataCloud</a
+                  >
+                </td>
+                <td>تحويل الإحداثيات إلى اسم مدينة</td>
+                <td>الإحداثيات، وبإذنك فقط</td>
+              </tr>
+              <tr>
+                <td><a href="https://open-meteo.com/en/terms" rel="noopener">Open-Meteo</a></td>
+                <td>البحث عن مدينة بالاسم</td>
+                <td>نص المدينة الذي كتبته</td>
+              </tr>
+              <tr>
+                <td><a href="https://alquran.cloud" rel="noopener">AlQuran Cloud</a></td>
+                <td>ترجمات القرآن</td>
+                <td>رقم السورة ومعرّف النسخة</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://quran.foundation/privacy" rel="noopener">مؤسسة القرآن</a>
+                  (<code>api.quran.com</code> وخطوط المصحف)
+                </td>
+                <td>توقيتات الكلمات وخطوط صفحات المصحف</td>
+                <td>معرّف القارئ ورقم السورة ورقم الصفحة</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://islamic.network" rel="noopener">شبكة Islamic Network</a> و
+                  <a href="https://everyayah.com" rel="noopener">everyayah.com</a>
+                </td>
+                <td>صوت التلاوة لكل آية</td>
+                <td>مسار الملف الصوتي المطلوب</td>
+              </tr>
+              <tr>
+                <td><a href="https://archive.org/about/terms" rel="noopener">أرشيف الإنترنت</a></td>
+                <td>المكتبة الصوتية وصور الأغلفة</td>
+                <td>العنصر والملف المطلوب</td>
+              </tr>
+              <tr>
+                <td><a href="https://posthog.com/privacy" rel="noopener">PostHog</a></td>
+                <td>قياسات الاستخدام وتتبّع الأخطاء، منطقة الاتحاد الأوروبي</td>
+                <td>معرّف عشوائي وأسماء أحداث وتفضيلات التطبيق وأثر التنفيذ</td>
+              </tr>
+              <tr>
+                <td><a href="https://expo.dev/privacy" rel="noopener">Expo</a></td>
+                <td>التحديثات الفورية ومقاييس الأداء</td>
+                <td>إصدار التطبيق والقناة والمنصّة وطراز الجهاز والأزمنة</td>
+              </tr>
+              <tr>
+                <td><a href="https://policies.google.com/privacy" rel="noopener">جوجل بلاي</a></td>
+                <td>التوزيع والتحديث داخل التطبيق ونافذة التقييم</td>
+                <td>ما يحتاجه بلاي للتنزيل أو التحديث، بناءً على طلبك</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          لا توجد في هذه القائمة أي شبكة إعلانات، ولا حزمة إحالة، ولا وسيط بيانات، ولا شيء منها داخل
+          التطبيق.
+        </p>
+
+        <h2 id="ar-18">١٨. تعديلات السياسة</h2>
+        <p>
+          نحدّث هذه الصفحة كلما تغيّرت ميزة أو مصدر بيانات. التاريخ في الأعلى يعبّر عن النسخة الحالية،
+          والسجل الكامل للتغييرات علني في مستودع هذه الصفحة على GitHub، والتغييرات الجوهرية تُذكر في
+          ملاحظات إصدار التطبيق.
+        </p>
+
+        <h2 id="ar-19">١٩. التواصل</h2>
+        <div class="contact">
+          <p>
+            لأي سؤال عن الخصوصية، أو لحذف بيانات القياس الخاصة بك:
+            <a href="mailto:boogado@yahoo.com">boogado@yahoo.com</a>
+          </p>
+          <p>المطوّر: محمد جادو · التطبيق: رفيق (<code>com.mohamedgado.rafiq</code>)</p>
+        </div>
+
+        <footer class="page">
+          <p>
+            هذه الصفحة ثابتة ومستضافة على GitHub Pages. لا تضع كوكيز، ولا تشغّل أي قياس، ولا تحمّل
+            خطوطًا أو سكربتات من خوادم أخرى.
+          </p>
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      // Both languages ship in the DOM so crawlers and reader modes see the full policy.
+      // The toggle only flips visibility plus the document lang/dir.
+      (function () {
+        var docs = { en: document.getElementById("doc-en"), ar: document.getElementById("doc-ar") };
+        var btns = { en: document.getElementById("btn-en"), ar: document.getElementById("btn-ar") };
+        var root = document.documentElement;
+
+        function apply(lang, remember) {
+          var other = lang === "en" ? "ar" : "en";
+          docs[lang].classList.remove("lang-hidden");
+          docs[other].classList.add("lang-hidden");
+          btns[lang].setAttribute("aria-pressed", "true");
+          btns[other].setAttribute("aria-pressed", "false");
+          root.lang = lang;
+          root.dir = lang === "ar" ? "rtl" : "ltr";
+          if (remember) {
+            try {
+              localStorage.setItem("rafiq-privacy-lang", lang);
+            } catch (e) {
+              // Private browsing can block storage. The toggle still works for this visit.
+            }
+          }
+        }
+
+        // A deep link to a section anchor wins over the stored choice, so a shared
+        // section link always lands on the section it names.
+        function langFromHash(hash) {
+          if (/^#ar-/.test(hash)) return "ar";
+          if (/^#en-/.test(hash)) return "en";
+          return null;
+        }
+
+        function storedLang() {
+          try {
+            return localStorage.getItem("rafiq-privacy-lang");
+          } catch (e) {
+            return null; // private browsing can block storage
+          }
+        }
+
+        function browserLang() {
+          var tag = (navigator.language || "en").toLowerCase();
+          return tag.indexOf("ar") === 0 ? "ar" : "en";
+        }
+
+        apply(langFromHash(location.hash) || storedLang() || browserLang(), false);
+
+        btns.en.addEventListener("click", function () {
+          apply("en", true);
+        });
+        btns.ar.addEventListener("click", function () {
+          apply("ar", true);
+        });
+      })();
+    </script>
+  </body>
 </html>
