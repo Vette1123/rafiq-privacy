@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+# The adhkar recitations the app streams. Nothing to index, and a crawler walking
+# ~130 MB of mp3 is bandwidth spent on nobody.
+Disallow: /audio/
 
 Sitemap: https://vette1123.github.io/rafiq-privacy/sitemap.xml

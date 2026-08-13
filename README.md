@@ -25,8 +25,37 @@ Content comes from public Islamic and map APIs that the device calls directly.
 |---|---|
 | `index.html` | The policy. Arabic and English, both in the DOM, one visible at a time |
 | `404.html` | Meta-refresh to the policy, so no old or mistyped link dead-ends |
-| `robots.txt` | Allow all, points at the sitemap |
+| `robots.txt` | Allow all except `/audio/`, points at the sitemap |
 | `sitemap.xml` | The one real page |
+| `audio/hisn/{n}.mp3` | The adhkar recitations the app plays — see below |
+
+## The adhkar audio
+
+`audio/hisn/` holds the حصن المسلم per-item recitations, one file per numbered item of
+the book. The source is the freely downloadable
+[`hisnul_muslim_202010`](https://archive.org/details/hisnul_muslim_202010) item on
+archive.org. **The reciter is not named there** — the item carries no creator and no
+licence field — so the recording is credited rather than a person. If the reciter is
+identified, or asks us not to host it, this directory goes and the app falls back to
+silence on those cards. The app plays from here rather than hot-linking archive.org.
+
+They are **re-mastered, not re-hosted as-is**, and normalised to the same loudness as
+every other recitation in the app: a denoise pass, two-pass loudness to −19 LUFS, a
+limiter, then mono 44.1 kHz 96 kbps. A file is published only if it measures inside the
+band afterwards **and** its length agrees with the length of the text it claims to
+recite — the numbering is proven per file, not trusted, because a corpus numbered
+differently would put the wrong recitation on the right card. The before/after numbers
+for every file are committed in the app repo at `scripts/data/hisn-remaster.json`, and the
+pipeline that produced them is `scripts/remaster-hisn-audio.mjs` — nothing here is hand-
+edited, and re-running the script reproduces the whole directory.
+
+The corpus this replaced (hisnmuslim.com, recited by حمد الدريهم) was recorded in a live
+room: a ticking clock and birds are audible under the voice on many files, which no
+denoise removes. It is still used, but only as a reference — its numbering is known good,
+so the durations of its files are what the new corpus is checked against.
+
+They live beside the policy because this is the Pages site the app already depends on:
+one public repo, no build, no cost, and a URL that has to keep resolving anyway.
 
 There is no account-deletion page, and Play does not require one: the app has no accounts
 and we hold no copy of anyone's data. Deletion is covered by section 14 of the policy
@@ -73,6 +102,7 @@ security, retention and deletion, rights, children, third parties, changes, cont
 | `verses.quran.foundation` | Mushaf page fonts, downloaded per page and cached |
 | `cdn.islamic.network`, `everyayah.com` | Per-ayah recitation audio |
 | `archive.org` | Audio collections and cover artwork |
+| `vette1123.github.io` | The adhkar recitations, from this repo's `audio/hisn/` |
 | `eu.i.posthog.com` | Usage analytics and error tracking, EU region |
 | `u.expo.dev` and EAS | Over-the-air updates, Insights, Observe |
 | `play.google.com` | Store listing, in-app updates, rating dialog |
