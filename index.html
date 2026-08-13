@@ -778,6 +778,14 @@
             the app's own boundaries, with stack traces.
           </li>
           <li>
+            Crashes, including the ones that never reach JavaScript. Android records every abnormal
+            end of the app's process — the reason, the killing signal and, for a native crash, the
+            stack of the thread that died — and Rafiq forwards those records the next time you open
+            it, together with the app version and the time of the crash. It also notes when a
+            previous run ended without shutting down cleanly, and how long it had been running. None
+            of this carries anything you read, typed or saved.
+          </li>
+          <li>
             An identifier that is <strong>random and generated on your device</strong>. Since Rafiq
             has no accounts, there is nothing to attach it to: no name, no email, no phone number, no
             advertising id.
@@ -1372,6 +1380,13 @@
           <li>
             الأخطاء: استثناءات JavaScript غير المعالَجة، ورفض الوعود، والأخطاء التي تلتقطها حدود
             التطبيق، مع أثر التنفيذ.
+          </li>
+          <li>
+            الأعطال، بما فيها ما لا يصل إلى JavaScript أصلًا. يسجّل أندرويد كل انتهاء غير طبيعي
+            لعملية التطبيق — السبب، والإشارة التي أنهته، وأثر تنفيذ الخيط الذي مات في العطل
+            البرمجي — ويرسل رفيق هذه السجلات عند فتحه في المرة التالية، ومعها إصدار التطبيق ووقت
+            العطل. ويسجّل كذلك أن تشغيلًا سابقًا انتهى دون إغلاق سليم، وكم دام قبل ذلك. ولا يحمل
+            شيء من هذا ما قرأتَه أو كتبتَه أو حفظتَه.
           </li>
           <li>
             معرّف <strong>عشوائي يُولَّد على جهازك</strong>. ولأن رفيق بلا حسابات فلا يوجد ما يُربط
