@@ -25,6 +25,7 @@ Content comes from public Islamic and map APIs that the device calls directly.
 |---|---|
 | `index.html` | The policy. Arabic and English, both in the DOM, one visible at a time |
 | `404.html` | Meta-refresh to the policy, so no old or mistyped link dead-ends |
+| `go.html` | The install link inside every share card's QR: sends an iPhone to the App Store, everything else to Play. Served at `/go`; the path must never change, printed cards cannot be updated |
 | `robots.txt` | Allow all except `/audio/`, points at the sitemap |
 | `sitemap.xml` | The one real page |
 | `audio/hisn/{n}.mp3` | The adhkar recitations the app plays — see below |
