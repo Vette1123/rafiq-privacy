@@ -155,10 +155,11 @@
       }
       .store.primary .t span { color: hsla(30, 40%, 15%, 0.72); }
       /* Apple's mark is monochrome, so it takes the button's ink. Play's mark is its
-         four colours or it is not Play's mark; on the gold button it sits on a small
-         ink coin so the colours keep their contrast. */
+         four colours or it is not Play's mark; on the gold button alone it sits on a
+         small ink coin so the colours keep their contrast (on the dark button the
+         coin read as a box with an edge, not as a coin). */
       .store.apple svg path { fill: currentColor; }
-      .store.play svg { padding: 6px; border-radius: 10px; background: var(--plate); box-sizing: border-box; }
+      .store.primary.play svg { padding: 6px; border-radius: 10px; background: var(--plate); box-sizing: border-box; }
       .foot {
         margin-top: 34px;
         font-size: 13px;
