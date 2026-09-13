@@ -271,7 +271,7 @@
         // tries the scheme once and simply stays put if nothing answers; the store
         // buttons are already on screen. Nothing here runs for a plain /go.
         var params = new URLSearchParams(location.search);
-        var to = (params.get('to') || '').replace(/^/+/, '');
+        var to = (params.get('to') || '').replace(/^\/+/, '');
         if (!to) return;
         params.delete('to');
         var rest = params.toString();
