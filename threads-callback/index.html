@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Threads callback · Rafiq</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#0e1a15" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E1614'/%3E%3Cpath d='M11 25V15a5 5 0 0 1 10 0v10' stroke='%23D6B566' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <!--
+      The OAuth redirect target for Rafiq's Threads app. Threads rejects
+      http://localhost at whitelist time — the URI must be HTTPS — so the
+      callback cannot be the loopback listener LinkedIn's flow uses. This page
+      is the whole answer to that: it exists, it loads, and it hands the address
+      back. Nothing is sent anywhere; the code never leaves the browser.
+
+      Whitelist this EXACT string under the Threads app -> Threads API use case
+      -> Settings -> Redirect Callback URLs, and put the same string in the
+      repo's .env.local as THREADS_REDIRECT_URI:
+
+        https://vette1123.github.io/rafiq-privacy/threads-callback
+
+      Unlike every other page here this one faces an operator mid-terminal, not
+      a reader — so it is English and LTR while keeping the same world. Self
+      contained like the rest: no web fonts, no scripts from anyone else.
+
+      404.html here carries <meta http-equiv="refresh"> to the policy, and a refresh
+      DROPS the query string — so a code sent to any path that does not exist is gone
+      before it can be read. This must stay a real page at the exact registered path,
+      which is why it is threads-callback/index.html and not a .html file.
+
+      A grant code is single-use and expires in minutes. It is not a credential
+      worth protecting after that, but the page is noindex/no-referrer anyway so
+      a code sitting in a query string never reaches an analytics log.
+    -->
+    <style>
+      :root {
+        --bg: #0e1a15;
+        --ink: #fdf9f1;
+        --soft: hsl(40, 24%, 84%);
+        --faint: hsl(40, 20%, 68%);
+        --gold: hsl(42, 58%, 62%);
+        --gold-deep: hsl(42, 56%, 46%);
+        --plate: #1b1712;
+        --line: hsla(42, 58%, 62%, 0.28);
+        --bad: hsl(8, 62%, 66%);
+        --ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 32px 16px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--ui);
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection {
+        background: var(--gold);
+        color: #14100b;
+      }
+      :focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      main {
+        width: min(640px, 100%);
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+        font-weight: 620;
+        letter-spacing: -0.021em;
+        text-wrap: balance;
+      }
+      .lede {
+        margin: 0 0 28px;
+        color: var(--faint);
+        text-wrap: pretty;
+      }
+      .plate {
+        background: var(--plate);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+      }
+      .plate + .plate {
+        margin-top: 14px;
+      }
+      .label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .value {
+        margin: 0;
+        font-family: var(--mono);
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--soft);
+        word-break: break-all;
+        white-space: pre-wrap;
+        user-select: all;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 14px;
+      }
+      button {
+        font: inherit;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        color: #14100b;
+        background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+        border: 0;
+        border-radius: 9px;
+        padding: 9px 16px;
+        cursor: pointer;
+        transition:
+          filter 160ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      button:hover {
+        filter: brightness(1.08);
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      button[disabled] {
+        cursor: default;
+        filter: saturate(0.5) brightness(0.85);
+      }
+      .said {
+        font-size: 0.875rem;
+        color: var(--gold);
+      }
+      .next {
+        margin: 26px 0 0;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--faint);
+        font-size: 0.9375rem;
+      }
+      .next code {
+        font-family: var(--mono);
+        font-size: 0.85em;
+        color: var(--soft);
+      }
+      .bad .label {
+        color: var(--bad);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        button {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="title">Threads authorised</h1>
+      <p class="lede" id="lede">Copy the full address below and give it to the terminal.</p>
+
+      <section class="plate" id="urlPlate">
+        <span class="label">Full address — this is what postkit wants</span>
+        <p class="value" id="url"></p>
+        <div class="row">
+          <button type="button" id="copyUrl">Copy address</button>
+          <span class="said" id="saidUrl" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="plate" id="codePlate">
+        <span class="label">Grant code only</span>
+        <p class="value" id="code"></p>
+        <div class="row">
+          <button type="button" id="copyCode">Copy code</button>
+          <span class="said" id="saidCode" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="plate bad" id="errPlate" hidden>
+        <span class="label" id="errLabel">No code in this address</span>
+        <p class="value" id="errBody"></p>
+      </section>
+
+      <p class="next">
+        Interactive: <code>pnpm post:auth threads</code> is waiting for the address.<br />
+        No keyboard on the other end: run
+        <code>POSTKIT_REDIRECT_URL='&lt;address&gt;' pnpm post:auth threads</code>.<br />
+        The code is single-use and expires within minutes — re-run the command to get a new one.
+      </p>
+    </main>
+
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var code = params.get("code");
+        var error = params.get("error");
+        var reason = params.get("error_description") || params.get("error_reason");
+
+        var show = function (id, on) {
+          document.getElementById(id).hidden = !on;
+        };
+
+        if (code) {
+          document.getElementById("url").textContent = location.href;
+          document.getElementById("code").textContent = code;
+        } else {
+          // Two different failures land here and they need different sentences:
+          // Meta said no, or somebody opened the page directly.
+          document.getElementById("title").textContent = error
+            ? "Threads refused"
+            : "Nothing to copy";
+          document.getElementById("lede").textContent = error
+            ? "The grant did not happen. Start the command again."
+            : "Open this page by finishing pnpm post:auth threads, not on its own.";
+          document.getElementById("errLabel").textContent = error
+            ? "Threads returned an error"
+            : "No code in this address";
+          document.getElementById("errBody").textContent = error
+            ? error + (reason ? " — " + reason : "")
+            : "This page only has something to show when Threads redirects to it with ?code=.";
+          show("urlPlate", false);
+          show("codePlate", false);
+          show("errPlate", true);
+        }
+
+        var wire = function (buttonId, saidId, read) {
+          var button = document.getElementById(buttonId);
+          if (!button) return;
+          button.addEventListener("click", function () {
+            var text = read();
+            var done = function (ok) {
+              var said = document.getElementById(saidId);
+              // The clipboard is blocked in more places than it is granted —
+              // insecure origins, locked-down browsers — and a button that
+              // silently does nothing is worse than one that admits it.
+              said.textContent = ok ? "Copied" : "Copy blocked — select it by hand";
+              if (ok) {
+                button.disabled = true;
+                setTimeout(function () {
+                  button.disabled = false;
+                  said.textContent = "";
+                }, 2200);
+              }
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+              navigator.clipboard.writeText(text).then(
+                function () {
+                  done(true);
+                },
+                function () {
+                  done(false);
+                }
+              );
+            } else {
+              done(false);
+            }
+          });
+        };
+
+        wire("copyUrl", "saidUrl", function () {
+          return location.href;
+        });
+        wire("copyCode", "saidCode", function () {
+          return code || "";
+        });
+      })();
+    </script>
+
+    <noscript>
+      <p style="margin-top: 20px; color: hsl(40, 20%, 68%)">
+        JavaScript is off, so this page cannot read the address for you. Copy it straight out of
+        the browser's address bar — the whole thing, including everything after the `?`.
+      </p>
+    </noscript>
+  </body>
+</html>
