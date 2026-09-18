@@ -271,6 +271,33 @@
         // tries the scheme once and simply stays put if nothing answers; the store
         // buttons are already on screen. Nothing here runs for a plain /go.
         var params = new URLSearchParams(location.search);
+
+        // Attribution. `?s=<source>` — and an optional `?m=<medium>` — is the only
+        // thing that lets one channel be told from another once an install has
+        // landed. Play takes ONE `referrer` parameter whose value is itself a
+        // percent-encoded query string; utm_ keys written at the top level are
+        // dropped silently, with no warning, and an install filed as organic can
+        // never be reattributed afterwards. Apple takes a campaign token, `ct`.
+        //
+        // The defaults are deliberate, not neutral. Every greeting and share card
+        // ever sent carries a bare /go, and those arrivals are overwhelmingly QR
+        // scans — so an untagged visit is filed as card/qr rather than thrown away
+        // as organic. The app repo's marketing/tracked-links.md is the list of
+        // sources; a source has to be spelled identically in every one of them or
+        // a single channel reports as three.
+        var source = (params.get('s') || 'card').slice(0, 40);
+        var medium = (params.get('m') || 'qr').slice(0, 40);
+        var playEl = document.getElementById('play');
+        var appleEl = document.getElementById('apple');
+        playEl.href =
+          playEl.getAttribute('href') +
+          '&referrer=' +
+          encodeURIComponent('utm_source=' + source + '&utm_medium=' + medium);
+        appleEl.href =
+          appleEl.getAttribute('href') + '?ct=' + encodeURIComponent(source + '-' + medium);
+        params.delete('s');
+        params.delete('m');
+
         var to = (params.get('to') || '').replace(/^\/+/, '');
         if (!to) return;
         params.delete('to');
