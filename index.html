@@ -498,7 +498,7 @@
           what it keeps on your device, what leaves it, and to whom.
         </p>
         <p class="meta">
-          Last updated: <b><time datetime="2026-08-13">13 August 2026</time></b> · Covers app version
+          Last updated: <b><time datetime="2026-09-24">24 September 2026</time></b> · Covers app version
           <b>1.48.1</b> and later · Package <code>com.mohamedgado.rafiq</code>
         </p>
 
@@ -661,7 +661,10 @@
         </p>
         <p>
           If you deny the permission, you can search for a city by name instead. That search sends
-          the text you typed to <strong>Open-Meteo</strong>'s geocoding service and nothing else.
+          the text you typed to <strong>Open-Meteo</strong>'s geocoding service and, when it finds
+          nothing or the name is Arabic, to <strong>OpenStreetMap</strong>'s Nominatim, and nothing
+          else. For a place found through OpenStreetMap, the app then sends that place's coordinates
+          (not yours) to Open-Meteo to learn its time zone.
         </p>
 
         <h2 id="en-5">5. Qibla and device sensors</h2>
@@ -1032,7 +1035,16 @@
               </tr>
               <tr>
                 <td><a href="https://open-meteo.com/en/terms" rel="noopener">Open-Meteo</a></td>
-                <td>Searching for a city by name</td>
+                <td>Searching for a city by name, and a found city's time zone</td>
+                <td>The city text you typed, or that city's coordinates</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://osmfoundation.org/wiki/Privacy_Policy" rel="noopener"
+                    >OpenStreetMap (Nominatim)</a
+                  >
+                </td>
+                <td>Searching for a city by name, when Open-Meteo cannot find it</td>
                 <td>The city text you typed</td>
               </tr>
               <tr>
@@ -1132,7 +1144,7 @@
           يغادره، وإلى مَن.
         </p>
         <p class="meta">
-          آخر تحديث: <b><time datetime="2026-08-13">١٣ أغسطس ٢٠٢٦</time></b> · تغطي الإصدار
+          آخر تحديث: <b><time datetime="2026-09-24">٢٤ سبتمبر ٢٠٢٦</time></b> · تغطي الإصدار
           <b>1.48.1</b> وما بعده · معرّف الحزمة <code>com.mohamedgado.rafiq</code>
         </p>
 
@@ -1286,7 +1298,9 @@
         </p>
         <p>
           وإن رفضت الإذن فيمكنك البحث عن مدينة بالاسم، ويرسل هذا البحث النص الذي كتبته إلى خدمة البحث
-          الجغرافي في <strong>Open-Meteo</strong> ولا شيء غيره.
+          الجغرافي في <strong>Open-Meteo</strong>، وإلى خدمة Nominatim من <strong>OpenStreetMap</strong>
+          إن لم يجد شيئًا أو كان الاسم عربيًا، ولا شيء غيره. وللمكان الذي يأتي من OpenStreetMap يرسل
+          التطبيق إحداثياته هو (لا إحداثياتك) إلى Open-Meteo ليعرف منطقته الزمنية.
         </p>
 
         <h2 id="ar-5">٥. القبلة ومستشعرات الجهاز</h2>
@@ -1631,7 +1645,16 @@
               </tr>
               <tr>
                 <td><a href="https://open-meteo.com/en/terms" rel="noopener">Open-Meteo</a></td>
-                <td>البحث عن مدينة بالاسم</td>
+                <td>البحث عن مدينة بالاسم، ومعرفة المنطقة الزمنية لمدينة وُجدت</td>
+                <td>نص المدينة الذي كتبته، أو إحداثيات تلك المدينة</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://osmfoundation.org/wiki/Privacy_Policy" rel="noopener"
+                    >OpenStreetMap (Nominatim)</a
+                  >
+                </td>
+                <td>البحث عن مدينة بالاسم حين لا يجدها Open-Meteo</td>
                 <td>نص المدينة الذي كتبته</td>
               </tr>
               <tr>

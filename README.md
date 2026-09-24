@@ -98,6 +98,8 @@ security, retention and deletion, rights, children, third parties, changes, cont
 | `api.aladhan.com` | Prayer times and the monthly prayer / Hijri calendar |
 | `api.bigdatacloud.net` | Reverse geocoding coordinates into a city name |
 | `geocoding-api.open-meteo.com` | City search by typed name |
+| `nominatim.openstreetmap.org` | City search by typed name, when Open-Meteo finds nothing or the name is Arabic |
+| `api.open-meteo.com` | The time zone of a city found through OpenStreetMap (its coordinates, not the user's) |
 | `api.alquran.cloud` | Qur'an translations |
 | `api.quran.com` | Word-by-word recitation timings |
 | `verses.quran.foundation` | Mushaf page fonts, downloaded per page and cached |
