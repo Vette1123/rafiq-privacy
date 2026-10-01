@@ -29,6 +29,7 @@ Content comes from public Islamic and map APIs that the device calls directly.
 | `robots.txt` | Allow all except `/audio/`, points at the sitemap |
 | `sitemap.xml` | The one real page |
 | `audio/hisn/{n}.mp3` | The adhkar recitations the app plays — see below |
+| `fonts/qcf-marks/v1/p{n}.ttf` | The tashkīl layer of each muṣḥaf page — see below |
 
 ## The adhkar audio
 
@@ -151,3 +152,15 @@ third parties for advertising. All traffic is over TLS.
 ## Contact
 
 boogado@yahoo.com
+
+## The tashkīl layer
+
+`fonts/qcf-marks/v1/` holds one font per muṣḥaf page (604). Each is the KFGQPC V1 page font
+the reader already draws, with every outline removed except the ḥarakāt, at the same
+advances and metrics. The app draws it as a tinted layer exactly over the page, so the
+muṣḥaf keeps its own calligraphy and only the tashkīl changes colour.
+
+Nothing here is hand-edited: `scripts/qcf-marks/build.py` in the app repo rebuilds the whole
+directory from the V1 fonts and the Qur'an text, and `--verify` checks every page against
+V1 pixel by pixel. The `v1/` is the app's cache key: a rebuild publishes to `v2/` so a phone
+never keeps a stale layer.
