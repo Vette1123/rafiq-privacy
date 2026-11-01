@@ -170,3 +170,7 @@ Nothing here is hand-edited: `scripts/qcf-marks/build.py` in the app repo rebuil
 directory from the V1 fonts and the Qur'an text, and `--verify` checks every page against
 V1 pixel by pixel. The `v1/` is the app's cache key: a rebuild publishes to `v2/` so a phone
 never keeps a stale layer.
+
+## Install page
+
+`go.html` and `go-ar.html` are generated: edit `go.template.html` or `go.copy.json`, then run `node scripts/build-go.mjs`.

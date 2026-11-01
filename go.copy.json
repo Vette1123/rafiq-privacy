@@ -1,0 +1,72 @@
+{
+  "slug": "rafiq",
+  "appleId": "6806678979",
+  "apple": "https://apps.apple.com/app/id6806678979",
+  "play": "https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq",
+  "category": "LifestyleApplication",
+  "image": "icon.png",
+  "en": {
+    "title": "Download Rafiq: Quran, Prayer Times & Qibla App | iPhone & Android",
+    "description": "Get Rafiq, a free Muslim app with the Quran, prayer times, adhan, qibla compass, azkar and the Hijri calendar. No ads, no account. For iPhone and Android.",
+    "ldName": "Rafiq",
+    "ldAlt": "رفيق",
+    "h1": "Rafiq: Quran, Prayer Times & Qibla",
+    "sub": "رفيق",
+    "tagline": "A calm Muslim companion for daily worship.",
+    "nav": "Download Rafiq",
+    "open": "Open in Rafiq",
+    "appleTop": "For iPhone, iPad and Mac",
+    "apple": "Download on the App Store",
+    "playTop": "For Android",
+    "play": "Get it on Google Play",
+    "aboutH": "One app for daily worship",
+    "about": "Rafiq brings the Quran, prayer times, a qibla compass, azkar, du'as, the Islamic calendar and audio recitation into one calm app, with clear Arabic typography and no ads.",
+    "featuresH": "What is inside",
+    "features": [
+      ["Quran", "All 114 surahs in the Madani mushaf layout or verse by verse, with translation, tafsir and 42 reciters. The Arabic text works offline."],
+      ["Prayer times and adhan", "Times calculated on your device, 9 calculation methods, Shafi or Hanafi Asr, a live countdown and an adhan for each prayer."],
+      ["Qibla compass", "The direction and distance to the Kaaba from anywhere, on a dial or as a line on the map."],
+      ["Azkar and tasbih", "Morning, evening and after-prayer adhkar with their sources, plus a tasbih counter and the 99 Names of Allah."],
+      ["Hijri calendar and Ramadan", "The Hijri date beside the Gregorian, Islamic events, fasting reminders and suhoor and iftar times for every day of Ramadan."]
+    ],
+    "faqH": "Questions",
+    "faq": [
+      ["Is Rafiq free?", "Yes. Rafiq is free, with no ads and no account."],
+      ["Does Rafiq work offline?", "The Arabic Quran text is built in and prayer times are calculated on your device, so both work offline."],
+      ["Which phones can run Rafiq?", "Rafiq is on the App Store for iPhone, iPad and Mac, and on Google Play for Android."]
+    ],
+    "foot": "Free · No ads · No account<br /><a href=\"/rafiq-privacy/\">Privacy policy</a>"
+  },
+  "ar": {
+    "title": "تحميل تطبيق رفيق: القرآن الكريم ومواقيت الصلاة والقبلة",
+    "description": "حمّل رفيق، تطبيق إسلامي مجاني يجمع القرآن الكريم ومواقيت الصلاة والأذان واتجاه القبلة والأذكار والتقويم الهجري. بلا إعلانات ولا حسابات. للآيفون والأندرويد.",
+    "ldName": "رفيق",
+    "ldAlt": "Rafiq",
+    "h1": "رفيق: القرآن ومواقيت الصلاة والقبلة",
+    "sub": "Rafiq",
+    "tagline": "رفيقك الهادئ في عبادتك اليومية.",
+    "nav": "تحميل رفيق",
+    "open": "افتحه في رفيق",
+    "appleTop": "لأجهزة iPhone وiPad وMac",
+    "apple": "حمّل من App Store",
+    "playTop": "لأجهزة Android",
+    "play": "حمّل من Google Play",
+    "aboutH": "تطبيق واحد لعبادتك اليومية",
+    "about": "رفيق تطبيق إسلامي يجمع القرآن الكريم، والمصحف الشريف، ومواقيت الصلاة، والأذان، واتجاه القبلة، والأذكار، والأدعية، والتقويم الهجري، وأسماء الله الحسنى، وتلاوات القرآن الكريم في تطبيق واحد، بلا إعلانات ولا حسابات.",
+    "featuresH": "ماذا ستجد فيه",
+    "features": [
+      ["القرآن الكريم", "المصحف كاملًا برسم المصحف المدني أو آيةً بآية، مع تفسير و٤٢ قارئًا مشهورًا. النص العربي يعمل دون إنترنت."],
+      ["مواقيت الصلاة والأذان", "مواقيت تُحسب على جهازك، و٩ طرق حساب، ومذهب صلاة العصر، وعدّاد تنازلي للصلاة القادمة، وإشعارات الأذان."],
+      ["اتجاه القبلة", "بوصلة تشير إلى الكعبة المشرّفة من أي مكان في العالم، مع المسافة إلى المسجد الحرام."],
+      ["الأذكار والتسبيح", "أذكار الصباح والمساء وبعد الصلاة، ولكل ذكر فضله ومصدره، مع عدّاد تسبيح وأسماء الله الحسنى."],
+      ["التقويم الهجري ورمضان", "التاريخ الهجري والميلادي معًا، والمناسبات الإسلامية، وتذكيرات الصيام، ومواقيت السحور والإفطار لكل يوم من رمضان."]
+    ],
+    "faqH": "أسئلة شائعة",
+    "faq": [
+      ["هل رفيق مجاني؟", "نعم، رفيق مجاني، بلا إعلانات ولا حسابات."],
+      ["هل يعمل رفيق دون إنترنت؟", "نص القرآن العربي مدمج في التطبيق، ومواقيت الصلاة تُحسب على جهازك، فيعمل كلاهما دون إنترنت."],
+      ["ما الأجهزة التي يعمل عليها رفيق؟", "رفيق متوفر على App Store لأجهزة iPhone وiPad وMac، وعلى Google Play لأجهزة Android."]
+    ],
+    "foot": "مجاني · بلا إعلانات · بلا حسابات<br /><a href=\"/rafiq-privacy/\">سياسة الخصوصية</a>"
+  }
+}
