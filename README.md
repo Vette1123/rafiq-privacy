@@ -6,18 +6,21 @@ The published privacy policy for **Rafiq (رفيق)**, the Islamic companion app
 - **App on Google Play:** https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq
 - **Live policy:** https://vette1123.github.io/rafiq-privacy/
 
-The URL is referenced from the Google Play listing and Data safety form, and from inside
-the app (`Settings, Privacy policy`), so it must always resolve.
+The URL is referenced from the Google Play listing and Data safety form, App Store Connect,
+and from inside the app (`Settings, About, Privacy policy`, in versions after 1.96.1), so it
+must always resolve.
 
 ## What Rafiq is
 
 Prayer times and adhan reminders, qibla, the Qur'an with recitation and word-by-word
 timings, adhkar and tasbih, duas and the names of Allah, the Hijri calendar, audio
-collections, a prayer tracker, home-screen widgets, quick actions, and share cards.
+collections, Qur'an radio, a zakat calculator, a prayer tracker, home-screen widgets, quick
+actions, and share cards. On Android, iPhone, iPad and Mac.
 
-No accounts, no ads, no backend of ours. Everything personal (settings, bookmarks,
+No accounts, no ads, no backend of ours. Personal data (settings, bookmarks, notes,
 progress, counters, prayer tracker, audio history, coordinates) stays on the device.
-Content comes from public Islamic and map APIs that the device calls directly.
+Content comes from public Islamic and map APIs that the device calls directly. Usage events
+and crash reports go to PostHog and Expo under a random id (section 10 of the policy).
 
 ## What lives in this repo
 
@@ -28,7 +31,7 @@ Content comes from public Islamic and map APIs that the device calls directly.
 | `go.html` | The install link inside every share card's QR: sends an iPhone to the App Store, everything else to Play. Served at `/go`; the path must never change, printed cards cannot be updated |
 | `robots.txt` | Allow all except `/audio/`, points at the sitemap |
 | `sitemap.xml` | The one real page |
-| `audio/hisn/{n}.mp3` | The adhkar recitations the app plays — see below |
+| `audio/hisn/{n}.mp3`, `audio/adhkar/` | The adhkar and du'a recitations the app plays — see below |
 | `fonts/qcf-marks/v1/p{n}.ttf` | The tashkīl layer of each muṣḥaf page — see below |
 
 ## The adhkar audio
@@ -61,7 +64,7 @@ one public repo, no build, no cost, and a URL that has to keep resolving anyway.
 
 There is no account-deletion page, and Play does not require one: the app has no accounts
 and we hold no copy of anyone's data. Deletion is covered by section 14 of the policy
-(uninstall, or clear app storage).
+(uninstall, or clear app storage). Analytics are deleted on request by email.
 
 ## Why a separate repo
 
@@ -97,6 +100,7 @@ security, retention and deletion, rights, children, third parties, changes, cont
 | Host | Why |
 |---|---|
 | `api.aladhan.com` | Prayer times and the monthly prayer / Hijri calendar |
+| `umqserv.kacst.gov.sa` | Official Umm al-Qura times, for places in Saudi Arabia |
 | `api.bigdatacloud.net` | Reverse geocoding coordinates into a city name |
 | `geocoding-api.open-meteo.com` | City search by typed name |
 | `nominatim.openstreetmap.org` | City search by typed name, when Open-Meteo finds nothing or the name is Arabic |
@@ -104,26 +108,30 @@ security, retention and deletion, rights, children, third parties, changes, cont
 | `api.alquran.cloud` | Qur'an translations |
 | `api.quran.com` | Word-by-word recitation timings |
 | `verses.quran.foundation` | Mushaf page fonts, downloaded per page and cached |
-| `cdn.islamic.network`, `everyayah.com` | Per-ayah recitation audio |
+| `cdn.islamic.network`, `everyayah.com`, `cdn.mp3quran.net` | Recitation audio |
+| `backup.qurango.net`, `stream.radiojar.com` (redirects to plain-HTTP `n04.radiojar.com`) | Qur'an radio |
 | `archive.org` | Audio collections and cover artwork |
-| `vette1123.github.io` | The adhkar recitations, from this repo's `audio/hisn/` |
-| `eu.i.posthog.com` | Usage analytics and error tracking, EU region |
+| `anchor.fm`, `feeds.soundcloud.com`, `api.spreaker.com` | Podcast-based audio collections |
+| `vette1123.github.io` | Adhkar and du'a clips from `audio/`, the tashkīl layer from `fonts/` |
+| `eu.i.posthog.com`, `eu-assets.i.posthog.com` | Usage analytics and error tracking, EU region |
 | `u.expo.dev` and EAS | Over-the-air updates, Insights, Observe |
-| `play.google.com` | Store listing, in-app updates, rating dialog |
+| `play.google.com` | Store listing, in-app updates, rating dialog, install referrer |
+| `itunes.apple.com` | App Store version lookup on iOS |
 
 Prayer times are also computed on device with the `adhan` library, which is what keeps the
 app and its widgets correct offline.
 
 ### Permissions disclosed
 
-The table in section 12 matches the merged release manifest: coarse and fine location,
-notifications, exact alarms (`USE_EXACT_ALARM`, plus `SCHEDULE_EXACT_ALARM` up to API 31),
-foreground service and media playback, modify audio settings, internet plus network and
-Wi-Fi state, vibrate, wake lock, receive boot completed, legacy read/write storage (max SDK
-32), and the launcher badge permissions. `SYSTEM_ALERT_WINDOW` is also declared and is
-documented as unused. The policy states what is absent too: microphone, camera, contacts,
-SMS, call logs, photo library, installed-app list, activity recognition, and background
-location. `RECORD_AUDIO` and `ACTIVITY_RECOGNITION` are blocked in `app.json`.
+The table in section 12 matches the merged release manifest of 1.96.1: approximate location,
+notifications, exact alarms (`USE_EXACT_ALARM`), foreground service and media playback, modify
+audio settings, internet plus network and Wi-Fi state, vibrate, wake lock, receive boot
+completed, Do Not Disturb access (`ACCESS_NOTIFICATION_POLICY`), the launcher badge
+permissions, and the Play install referrer. `SYSTEM_ALERT_WINDOW` and `c2dm.RECEIVE` are also
+declared and documented as unused. The policy states what is absent too: precise location,
+microphone, camera, contacts, SMS, call logs, storage, photo library, installed-app list,
+activity recognition, and background location. `ACCESS_FINE_LOCATION`, `RECORD_AUDIO` and
+`ACTIVITY_RECOGNITION` are blocked in `app.json`. Section 12 also lists the iOS permissions.
 
 ## Maintaining it
 
@@ -144,10 +152,8 @@ When the app changes, the policy changes in the same session as the feature, not
 - Privacy policy URL: `https://vette1123.github.io/rafiq-privacy/`
 - Data deletion URL: not applicable, no accounts
 
-Data Safety should declare: approximate and precise location collected for app
-functionality and not stored on a server, app activity and diagnostics collected for
-analytics and crash reporting tied to a random per-install id, and no data shared with
-third parties for advertising. All traffic is over TLS.
+The Data safety declaration is `docs/PLAY-DATA-SAFETY.md` in the app repo, and the App Store
+labels are section 5 of `docs/APPLE-SUBMISSION.md`. Change them with this page.
 
 ## Contact
 
