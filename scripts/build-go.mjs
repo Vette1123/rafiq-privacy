@@ -164,7 +164,9 @@ function page(l) {
     FOOT: esc(t.foot),
     LINKS: t.links.map(([n, u]) => `<a href="${u}">${esc(n)}</a>`).join(''),
   }
-  return tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => {
+  // Inline CSS ships minified: comments out, whitespace collapsed. Lighthouse flags it otherwise.
+  const css = (c) => c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{};,>])\s*/g, '$1').replace(/;}/g, '}').trim()
+  return tpl.replace(/<style>([\s\S]*?)<\/style>/g, (_, c) => `<style>${css(c)}</style>`).replace(/\{\{(\w+)\}\}/g, (_, k) => {
     if (!(k in vals)) throw Error('no value for ' + k)
     return vals[k]
   })
