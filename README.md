@@ -9,7 +9,8 @@ adhkar, duas and the qibla (`com.mohamedgado.rafiq`).
 - **About the app:** https://www.mohamedgado.com/projects/rafiq
 - **App on Google Play:** https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq
 - **App on the App Store:** https://apps.apple.com/app/id6806678979
-- **Live policy:** https://vette1123.github.io/rafiq-privacy/
+- **Install page:** https://www.mohamedgado.com/projects/rafiq/go (Arabic: https://www.mohamedgado.com/projects/rafiq/go-ar)
+- **Privacy policy:** https://www.mohamedgado.com/projects/rafiq/privacy (also served at https://vette1123.github.io/rafiq-privacy/)
 
 `rafiq.mohamedgado.com` is the install link every post, bio and button uses: it 301s to
 `www.mohamedgado.com/projects/rafiq/go`, which serves `go.html` from here, with `?s=`/`?m=`
