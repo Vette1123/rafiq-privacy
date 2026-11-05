@@ -1,10 +1,20 @@
 # rafiq-privacy
 
-The published privacy policy for **Rafiq (رفيق)**, the Islamic companion app
-(`com.mohamedgado.rafiq`).
+The published privacy policy and install page for **Rafiq (رفيق)**, the free Islamic
+companion app for Android and iPhone: prayer times and adhan, the Qur'an with recitation,
+adhkar, duas and the qibla (`com.mohamedgado.rafiq`).
 
+**Get Rafiq:** https://rafiq.mohamedgado.com/?s=github&m=repo
+
+- **About the app:** https://www.mohamedgado.com/projects/rafiq
 - **App on Google Play:** https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq
+- **App on the App Store:** https://apps.apple.com/app/id6806678979
 - **Live policy:** https://vette1123.github.io/rafiq-privacy/
+
+`rafiq.mohamedgado.com` is the install link every post, bio and button uses: it 301s to
+`www.mohamedgado.com/projects/rafiq/go`, which serves `go.html` from here, with `?s=`/`?m=`
+kept. The github.io `/go` stays live for the app's share sheet and printed cards; never paste
+it anywhere new.
 
 The URL is referenced from the Google Play listing and Data safety form, App Store Connect,
 and from inside the app (`Settings, About, Privacy policy`, in versions after 1.96.1), so it
