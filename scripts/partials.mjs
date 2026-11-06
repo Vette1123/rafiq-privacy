@@ -6,12 +6,16 @@
 // under every path mohamedgado.com proxies them at). `.css` lands in <style>, `.js` in
 // <script>, anything else as is. Idempotent: running it twice changes nothing.
 //
-// Used by scripts/build-go.mjs, scripts/build-pages.mjs and masareef-app's `pnpm site:banks`.
+// Used by scripts/build-go.mjs, scripts/build-pages.mjs and the app repo's site scripts.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const PARTIALS = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'partials');
+// What every page carries, install page included: the look, the one header (both languages) and
+// both switches, which share one stored language and one stored theme, so the site reads as one
+// place. Pass it in `require` so a page that dropped a piece fails to build.
+export const SITE = ['head.html', 'theme.css', 'header.html', 'header.js', 'lang-pick.js', 'lang.js', 'switch.js'];
 const MARK = /<!--partial:([\w.-]+)-->[\s\S]*?<!--\/partial:\1-->/g;
 
 export function partial(name, dir = PARTIALS) {

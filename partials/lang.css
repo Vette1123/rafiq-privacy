@@ -1,0 +1,6 @@
+/* The two-language kit: privacy, terms, account deletion and every bank page ship both
+   languages in the DOM, one shown at a time. Keyed on <html lang>, which lang-pick.js sets
+   before the first paint; with no script the language the page is served in shows.
+   The header (both languages, every page) hides its other half in theme.css. */
+html:not([lang="ar"]) #doc-ar, html[lang="ar"] #doc-en,
+html:not([lang="ar"]) #foot-ar, html[lang="ar"] #foot-en { display: none; }
