@@ -186,4 +186,4 @@ never keeps a stale layer.
 
 ## Install page
 
-`go.html` and `go-ar.html` are generated: edit `go.template.html` or `go.copy.json`, then run `node scripts/build-go.mjs`.
+`go.html` and `go-ar.html` are generated: edit `go.template.html` or `go.copy.json`, then run `node scripts/build-go.mjs`. The look shared by every page (theme, top bar, nav, footer, theme switch) lives in `partials/`; after editing one run `node scripts/build-go.mjs` and `node scripts/build-pages.mjs` (both take `--check`), and `node --test scripts/partials.test.mjs`.
