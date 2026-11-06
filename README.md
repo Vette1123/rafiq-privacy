@@ -87,8 +87,15 @@ change log.
 
 ## How the page works
 
-- **Self-contained.** No web fonts, no CDN, no scripts from other hosts, no cookies, no
-  analytics. A privacy page should not be the thing that tracks you.
+- **Self-contained.** No web fonts, no CDN, no scripts from other hosts, no cookies.
+- **Counted, not tracked.** On mohamedgado.com (which proxies these pages) `partials/head.html`
+  loads that site's own Vercel Web Analytics, same origin and cookieless, so visits show in its
+  dashboard; a link's `?s=` arrives as `utm_source`. The github.io copies load nothing. The policy
+  says so in section 10 and the page footer; keep them in step if this ever changes.
+- **Header:** one partial (`partials/header.html` + `header.js`), sticky, hides going down and
+  slides back going up. It must sit directly in `<body>` or `position: sticky` does nothing.
+  One stored language (`rafiq-privacy-lang`, `partials/lang-pick.js`) serves every page; the install
+  page is one URL per language and is swapped for its other URL when the choice differs.
 - **Bilingual, both in the DOM.** Arabic and English ship in the same document, so
   crawlers and reader modes see the full policy in both languages. The toggle only flips
   visibility plus `lang` and `dir`, and stores the choice in `localStorage`
@@ -127,6 +134,7 @@ security, retention and deletion, rights, children, third parties, changes, cont
 | `anchor.fm`, `feeds.soundcloud.com`, `api.spreaker.com` | Podcast-based audio collections |
 | `vette1123.github.io` | Adhkar and du'a clips from `audio/`, the tashkīl layer from `fonts/` |
 | `eu.i.posthog.com`, `eu-assets.i.posthog.com` | Usage analytics and error tracking, EU region |
+| `mohamedgado.com` (Vercel) | Visit counts for these web pages only (section 10); the app never calls it |
 | `u.expo.dev` and EAS | Over-the-air updates, Insights, Observe |
 | `play.google.com` | Store listing, in-app updates, rating dialog, install referrer |
 | `itunes.apple.com` | App Store version lookup on iOS |
@@ -186,4 +194,4 @@ never keeps a stale layer.
 
 ## Install page
 
-`go.html` and `go-ar.html` are generated: edit `go.template.html` or `go.copy.json`, then run `node scripts/build-go.mjs`. The look shared by every page (theme, top bar, nav, footer, theme switch) lives in `partials/`; after editing one run `node scripts/build-go.mjs` and `node scripts/build-pages.mjs` (both take `--check`), and `node --test scripts/partials.test.mjs`.
+`go.html` and `go-ar.html` are generated: edit `go.template.html` or `go.copy.json`, then run `node scripts/build-go.mjs`. The look shared by every page (theme, the one header, language and theme switches, footer) lives in `partials/`; after editing one run `node scripts/build-go.mjs` and `node scripts/build-pages.mjs` (both take `--check`), and `node --test scripts/partials.test.mjs`.

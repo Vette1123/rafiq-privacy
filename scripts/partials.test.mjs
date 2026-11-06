@@ -2,7 +2,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { markCurrent, applyPartials, css } from './partials.mjs';
+import vm from 'node:vm';
+import { markCurrent, applyPartials, css, SITE } from './partials.mjs';
 
 const B = 'https://www.mohamedgado.com/projects/rafiq';
 const page = (canon, extra = '') => `<link rel="canonical" href="${canon}" />${extra}<nav class="topnav"><a href="${B}/go">Download</a><a href="${B}/go-ar">AR</a><a href="${B}/privacy">Privacy</a></nav><footer class="sitefoot"><a href="${B}/privacy">Policy</a><a href="${B}">About</a></footer>`;
@@ -80,9 +81,164 @@ test('theme: every tap target reaches 44px, and the policy contents ride beside 
   assert.match(theme, /\.sitefoot li a\s*\{[^}]*padding-block:\s*11px/);
   assert.match(theme, /\.foot a\s*\{[^}]*padding-block:\s*11px/);
   assert.match(theme, /\.crumbs a\s*\{[^}]*padding-block:\s*15px/);
-  assert.match(doc, /\.switch button\s*\{[^}]*min-height:\s*44px/);
+  assert.match(theme, /\.switch button\s*\{[^}]*min-height:\s*44px/);
   assert.match(doc, /\.toc a\s*\{[^}]*padding-block:\s*10px/);
   const wide = doc.match(/@media \(min-width: 1100px\) \{([^]*?)\n\}/)?.[1] ?? '';
   assert.match(wide, /\.prose > \.toc\s*\{[^}]*position:\s*sticky/);
   assert.match(wide, /grid-template-columns:\s*minmax\(0, 72ch\)/);
+});
+
+// ---- 6 Nov: one header, one remembered language, sticky header, visits counted (ported from masareef-privacy)
+
+const PAGES = ['go.html', 'go-ar.html', 'index.html', '404.html'];
+const readPage = (f) => fs.readFileSync(new URL('../' + f, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+const readPartial = (f) => fs.readFileSync(new URL('../partials/' + f, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+
+// Every page drew its own header (a lone "العربية" link, its own stored language). One now,
+// inlined from partials/header.html, with the same switches on every page.
+test('site: every page carries the one shared header and nothing else', () => {
+  for (const f of PAGES) {
+    const html = readPage(f);
+    for (const p of SITE) assert.ok(html.includes(`<!--partial:${p}-->`), `${f}: no ${p}`);
+    assert.equal(html.split('<header').length, 2, `${f}: a header besides the shared one`);
+    const own = html.replace(/<!--partial:lang(-pick)?\.js-->[\s\S]*?<!--\/partial:lang(-pick)?\.js-->/g, '');
+    assert.ok(!/go-lang'\s*,/.test(own), `${f}: writes its own language key`);
+    assert.doesNotMatch(own, /rafiq-privacy-lang/, `${f}: keeps its own copy of the language key`);
+  }
+  assert.ok(!fs.existsSync(new URL('../partials/topnav.en.html', import.meta.url)), 'the old per-language topnav partials are gone');
+});
+
+function runPick({ served, alt, stored = {}, nav = 'en-US', hash = '' }) {
+  const root = { lang: served, dir: '', style: {}, classList: { add() {} }, getAttribute: (k) => (k === 'data-alt' ? alt ?? null : null) };
+  let replaced = null;
+  const ctx = {
+    document: { documentElement: root },
+    location: { hash, search: '?s=ig', replace: (u) => (replaced = u) },
+    navigator: { language: nav, userAgent: 'Mozilla/5.0' },
+    localStorage: { getItem: (k) => stored[k] ?? null },
+  };
+  vm.runInNewContext(readPartial('lang-pick.js'), ctx);
+  return { lang: root.lang, replaced };
+}
+
+test('lang-pick: a language chosen on any page carries to the install page and back', () => {
+  const K = 'rafiq-privacy-lang';
+  assert.deepEqual(runPick({ served: 'en', alt: 'go-ar', stored: { [K]: 'ar' } }), { lang: 'en', replaced: 'go-ar?s=ig' });
+  assert.deepEqual(runPick({ served: 'ar', alt: 'go', stored: { [K]: 'en' } }), { lang: 'ar', replaced: 'go?s=ig' });
+  assert.equal(runPick({ served: 'en', alt: 'go-ar', stored: { 'go-lang': 'ar' } }).replaced, 'go-ar?s=ig', 'the old install-page key still counts');
+  assert.equal(runPick({ served: 'en', stored: { 'go-lang': 'ar' } }).lang, 'ar', 'and reaches the policy');
+  assert.equal(runPick({ served: 'en', alt: 'go-ar', nav: 'ar-EG' }).replaced, 'go-ar?s=ig', 'an Arabic browser goes to go-ar');
+  assert.deepEqual(runPick({ served: 'ar', alt: 'go', nav: 'en-US' }), { lang: 'ar', replaced: null }, 'the Arabic link stays Arabic');
+  assert.deepEqual(runPick({ served: 'en', stored: { [K]: 'ar' } }), { lang: 'ar', replaced: null }, 'the policy flips in place');
+  assert.equal(runPick({ served: 'en', stored: { [K]: 'ar' }, hash: '#en-4' }).lang, 'en', 'a section link wins');
+  for (const [f, alt] of [['go.html', 'go-ar'], ['go-ar.html', 'go']]) assert.match(readPage(f), new RegExp(`<html [^>]*data-alt="${alt}"`), `${f} names its other URL`);
+});
+
+// On a phone the header wraps to two rows, and the hero glow and grid (which start 120-140px
+// above the hero) began inside it as a hard band; the tabs backdrop blur sat on top of it.
+test('theme: hero layers fade in from their top edge, and nothing in the header is frosted', () => {
+  const theme = readPartial('theme.css');
+  assert.doesNotMatch(theme, /backdrop-filter/);
+  assert.match(theme, /--rise:\s*linear-gradient\(transparent,/);
+  assert.match(theme, /\.head::after, \.hero::after\s*\{[^}]*mask-image:[^;]*var\(--rise\)/);
+  assert.match(theme, /\.head::before\s*\{[^}]*mask-image:\s*linear-gradient\(transparent,/);
+  assert.match(fs.readFileSync(new URL('../go.template.html', import.meta.url), 'utf8'), /\.hero::before\s*\{[^}]*mask-image:\s*var\(--rise\)/);
+  assert.match(theme, /\[dir="rtl"\] \.crumbs li \+ li::before \{ transform: rotate\(-45deg\)/, 'the RTL chevron points left');
+});
+
+// position: sticky only holds inside a parent as tall as the page, so the header sits directly in
+// <body>; inside a header-only .wrap it would scroll away like before.
+test('header: every page puts it straight in <body>, sticky, with the Contents clear of it', () => {
+  for (const f of PAGES) {
+    assert.match(readPage(f), /<body[^>]*>\s*(<a class="skip"[^>]*>[^<]*<\/a>\s*)?<!--partial:header\.html-->/, `${f}: header is not a direct child of <body>`);
+  }
+  const theme = readPartial('theme.css');
+  assert.match(theme, /\.top \{ position: sticky; top: 0;/);
+  assert.match(theme, /\.top-hidden \.top \{ transform: translateY\(-100%\); \}/);
+  assert.match(theme, /\.top::before \{[^}]*background: var\(--bg\);/, 'the bar is solid: see-through let text ghost under it');
+  assert.match(readPartial('doc.css'), /\.prose > \.toc \{[^}]*position: sticky; top: calc\(24px \+ var\(--top-on\)\)/);
+});
+
+test('header.js: hides going down, returns going up, ignores jitter and keeps focus visible', () => {
+  const classes = new Set();
+  const handlers = {};
+  let focusInside = false;
+  let now = 0;
+  const top = { offsetHeight: 80, contains: () => focusInside, addEventListener: (t, f) => (handlers['top:' + t] = f) };
+  const ctx = {
+    scrollY: 0,
+    document: {
+      documentElement: { classList: { toggle: (c, on) => (on ? classes.add(c) : classes.delete(c)), contains: (c) => classes.has(c), remove: (c) => classes.delete(c) }, style: { setProperty() {} } },
+      querySelector: () => top,
+      addEventListener: (t, f) => (handlers['doc:' + t] = f),
+      activeElement: null,
+    },
+    addEventListener: (t, f) => (handlers[t] = f),
+    requestAnimationFrame: (f) => f(),
+    performance: { now: () => now },
+    window: {},
+  };
+  vm.runInNewContext(readPartial('header.js'), ctx);
+  const to = (y) => { ctx.scrollY = y; handlers.scroll(); return { stuck: classes.has('top-stuck'), hidden: classes.has('top-hidden') }; };
+  assert.deepEqual(to(0), { stuck: false, hidden: false });
+  assert.deepEqual(to(60), { stuck: true, hidden: false }, 'still within the header: never hidden');
+  assert.deepEqual(to(600), { stuck: true, hidden: true }, 'going down');
+  assert.deepEqual(to(596), { stuck: true, hidden: true }, '4px back is jitter');
+  assert.deepEqual(to(560), { stuck: true, hidden: false }, 'going up');
+  focusInside = true;
+  assert.equal(to(900).hidden, false, 'focus inside keeps it shown');
+  focusInside = false;
+  handlers['doc:click']({ target: { closest: () => ({}) } });
+  assert.equal(to(400).hidden, true, 'an in-page jump up keeps it away');
+  now = 2000;
+  assert.equal(to(300).hidden, false, 'then scrolling up brings it back');
+  assert.deepEqual(to(0), { stuck: false, hidden: false });
+});
+
+// Visits were invisible: mohamedgado.com proxies these pages from github.io, so they never got the
+// portfolio's <Analytics/>. The head loads Vercel Web Analytics on that host only.
+function runHead(hostname) {
+  const js = readPartial('head.html').match(/<script>([\s\S]*?)<\/script>/)[1];
+  const added = [];
+  const win = {};
+  const ctx = {
+    window: win, location: { hostname },
+    localStorage: { getItem: () => null },
+    document: { documentElement: { setAttribute() {} }, querySelectorAll: () => [], createElement: () => ({}), head: { appendChild: (n) => added.push(n) } },
+    Object,
+  };
+  vm.runInNewContext(js, ctx);
+  return { added, win };
+}
+
+test('head: Vercel Web Analytics loads on mohamedgado.com only, and ?s= becomes utm_source', () => {
+  for (const host of ['vette1123.github.io', 'localhost', 'mohamedgado.com.evil.example']) {
+    const { added, win } = runHead(host);
+    assert.equal(added.length, 0, `${host} loads nothing`);
+    assert.equal(win.va, undefined);
+  }
+  for (const host of ['www.mohamedgado.com', 'mohamedgado.com']) {
+    assert.deepEqual(runHead(host).added.map((n) => n.src), ['/_vercel/insights/script.js'], `${host}: same-origin script`);
+  }
+  const [kind, beforeSend] = runHead('www.mohamedgado.com').win.vaq[0];
+  assert.equal(kind, 'beforeSend');
+  const url = (u) => beforeSend({ type: 'pageview', url: u }).url;
+  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go?s=IG'), 'https://www.mohamedgado.com/projects/rafiq/go?s=IG&utm_source=ig');
+  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/privacy#en-10'), 'https://www.mohamedgado.com/projects/rafiq/privacy#en-10', 'no tag, untouched');
+  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go?s=x&utm_source=y'), 'https://www.mohamedgado.com/projects/rafiq/go?s=x&utm_source=y', 'an explicit utm wins');
+  // The policy says so, in both languages, and no page still claims to run none.
+  const policy = readPage('index.html');
+  assert.doesNotMatch(policy, /runs no analytics|ولا تشغّل أي قياس/, 'the policy still says no analytics');
+  assert.match(policy, /Vercel Web\s+Analytics,\s+without cookies/);
+  assert.match(policy, /تُعدّ الزيارة عبر Vercel Web Analytics بلا كوكيز/);
+  assert.match(policy, /<h3>This website<\/h3>/);
+  assert.match(policy, /<h3>هذا الموقع<\/h3>/);
+  assert.equal(policy.split('vercel.com/legal/privacy-policy').length, 3, 'Vercel is in both third-party tables');
+});
+
+test('build-pages --check passes on a current checkout, whatever its line endings', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const { fileURLToPath } = await import('node:url');
+  const r = spawnSync(process.execPath, [fileURLToPath(new URL('./build-pages.mjs', import.meta.url)), '--check'], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr || r.stdout);
 });
