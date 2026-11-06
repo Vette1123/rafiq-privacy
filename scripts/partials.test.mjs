@@ -1,6 +1,7 @@
 // node --test scripts/partials.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { markCurrent, applyPartials, css } from './partials.mjs';
 
 const B = 'https://www.mohamedgado.com/projects/rafiq';
@@ -34,4 +35,10 @@ test('a page that lost its theme marker fails loudly; markers are filled and ide
 
 test('css() minifies comments and whitespace', () => {
   assert.equal(css('a { color: red; } /* x */'), 'a{color: red}');
+});
+
+test('footer: at phone width the last column spans the row, so no column sits alone beside empty space', () => {
+  const t = fs.readFileSync(new URL('../partials/theme.css', import.meta.url), 'utf8');
+  const phone = t.match(/@media \(max-width: 560px\) \{ \.sitefoot \{[^}]*\}[^@]*\}/)?.[0] ?? '';
+  assert.match(phone, /\.sitefoot > nav:last-of-type \{ grid-column: 1 \/ -1; \}/);
 });
