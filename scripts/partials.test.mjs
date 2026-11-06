@@ -66,3 +66,23 @@ test('theme: the current nav item is clearly marked', async () => {
   assert.match(on, /inset 0 0 0 1px/);
   assert.match(theme, /\.topnav a\[aria-current\]::before\s*\{[^}]*border-radius:\s*50%/);
 });
+
+// 6 Nov audit: top-bar, footer and contents links were 36-40px tall (under the 44px tap
+// minimum), and on a wide screen the policy filled only the left half of the page.
+test('theme: every tap target reaches 44px, and the policy contents ride beside the text on wide screens', async () => {
+  const { readFileSync } = await import('node:fs');
+  const theme = readFileSync(new URL('../partials/theme.css', import.meta.url), 'utf8');
+  const doc = readFileSync(new URL('../partials/doc.css', import.meta.url), 'utf8');
+  assert.match(theme, /\.brand\s*\{[^}]*min-height:\s*44px/);
+  // the nav pills keep their 36px look; an invisible layer grows the hit area to 44px
+  assert.match(theme, /\.topnav a::after\s*\{[^}]*inset:\s*-4px 0/);
+  assert.match(theme, /\.topnav a\s*\{[^}]*position:\s*relative/);
+  assert.match(theme, /\.sitefoot li a\s*\{[^}]*padding-block:\s*11px/);
+  assert.match(theme, /\.foot a\s*\{[^}]*padding-block:\s*11px/);
+  assert.match(theme, /\.crumbs a\s*\{[^}]*padding-block:\s*15px/);
+  assert.match(doc, /\.switch button\s*\{[^}]*min-height:\s*44px/);
+  assert.match(doc, /\.toc a\s*\{[^}]*padding-block:\s*10px/);
+  const wide = doc.match(/@media \(min-width: 1100px\) \{([^]*?)\n\}/)?.[1] ?? '';
+  assert.match(wide, /\.prose > \.toc\s*\{[^}]*position:\s*sticky/);
+  assert.match(wide, /grid-template-columns:\s*minmax\(0, 72ch\)/);
+});

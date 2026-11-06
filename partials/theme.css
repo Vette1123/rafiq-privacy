@@ -62,7 +62,7 @@ p { margin: 0; text-wrap: pretty; }
 
 /* ---- top bar ---- */
 .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: max(18px, env(safe-area-inset-top)) 18px; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 18px; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-weight: 700; font-size: 18px; text-decoration: none; }
 .brand img { width: 40px; height: 40px; border-radius: 10px; }
 .brand small { font-weight: 500; color: var(--faint); font-size: 15px; }
 .lang { font: 600 14px var(--ui); padding: 10px 16px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); text-decoration: none; transition: border-color 200ms var(--ease); }
@@ -86,7 +86,7 @@ p { margin: 0; text-wrap: pretty; }
 .crumbs li { display: inline-flex; align-items: center; gap: 8px; }
 .crumbs li + li::before { content: ""; width: 5px; height: 5px; border-top: 1.5px solid currentColor; border-inline-end: 1.5px solid currentColor; transform: rotate(45deg); opacity: 0.7; }
 [dir="rtl"] .crumbs li + li::before { transform: rotate(-135deg); }
-.crumbs a { color: var(--soft); text-decoration: none; padding-block: 10px; }
+.crumbs a { color: var(--soft); text-decoration: none; padding-block: 15px; }
 .crumbs a:hover { color: var(--gold); }
 .crumbs [aria-current] { color: var(--ink); font-weight: 600; }
 
@@ -200,7 +200,7 @@ html[lang="ar"] .cta h2 { font-weight: 750; font-family: var(--arabic); letter-s
 .cta .badges { justify-content: center; }
 .foot { padding-block: 28px max(40px, env(safe-area-inset-bottom)); font-size: 14px; color: var(--faint); display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; border-top: 1px solid var(--line); }
 .foot nav { display: flex; gap: 6px 20px; flex-wrap: wrap; }
-.foot a { color: var(--soft); padding-block: 6px; }
+.foot a { color: var(--soft); padding-block: 11px; }
 .foot a:hover { color: var(--gold); }
 
 /* ---- site footer: every Rafiq page links every other one (partials/footer.*.html) ---- */
@@ -210,13 +210,14 @@ html[lang="ar"] .cta h2 { font-weight: 750; font-family: var(--arabic); letter-s
 .sf-brand p { margin-top: 14px; color: var(--soft); max-width: 42ch; font-size: 15px; }
 .sf-h { font-weight: 650; font-size: 13px; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 10px; }
 .sitefoot ul { list-style: none; margin: 0; padding: 0; }
-.sitefoot li a { display: inline-block; padding-block: 6px; color: var(--soft); text-decoration: none; text-wrap: balance; transition: color 160ms var(--ease); }
+.sitefoot li a { display: inline-block; padding-block: 11px; color: var(--soft); text-decoration: none; text-wrap: balance; transition: color 160ms var(--ease); }
 .sitefoot li a:hover, .sitefoot li a[aria-current] { color: var(--gold); }
 .sf-base { grid-column: 1 / -1; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; color: var(--faint); }
 @media (max-width: 560px) { .sitefoot { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; } .sitefoot > nav:last-of-type { grid-column: 1 / -1; } }
 /* ---- the top bar's links: every page one tap from the others ---- */
 .topnav { display: flex; gap: 2px; padding: 4px; border-radius: 999px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-.topnav a { display: inline-flex; align-items: center; min-height: 36px; padding: 6px 16px; border-radius: 999px; color: var(--soft); font: 600 14px var(--ui); text-decoration: none; white-space: nowrap; transition: color 160ms var(--ease), background-color 160ms var(--ease), box-shadow 160ms var(--ease), transform 120ms var(--ease); }
+.topnav a { position: relative; display: inline-flex; align-items: center; min-height: 36px; padding: 6px 16px; border-radius: 999px; color: var(--soft); font: 600 14px var(--ui); text-decoration: none; white-space: nowrap; transition: color 160ms var(--ease), background-color 160ms var(--ease), box-shadow 160ms var(--ease), transform 120ms var(--ease); }
+.topnav a::after { content: ""; position: absolute; inset: -4px 0; }
 .topnav a:hover { color: var(--ink); background: color-mix(in srgb, var(--gold) 8%, transparent); }
 .topnav a:active { transform: scale(0.97); }
 /* The page you are on: brand tint, a hairline ring and a lit dot, readable in both themes. */
