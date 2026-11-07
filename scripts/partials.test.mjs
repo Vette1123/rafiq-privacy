@@ -197,14 +197,14 @@ test('header.js: hides going down, returns going up, ignores jitter and keeps fo
 
 // Visits were invisible: mohamedgado.com proxies these pages from github.io, so they never got the
 // portfolio's <Analytics/>. The head loads Vercel Web Analytics on that host only.
-function runHead(hostname) {
+function runHead(hostname, canonical) {
   const js = readPartial('head.html').match(/<script>([\s\S]*?)<\/script>/)[1];
   const added = [];
   const win = {};
   const ctx = {
     window: win, location: { hostname },
     localStorage: { getItem: () => null },
-    document: { documentElement: { setAttribute() {} }, querySelectorAll: () => [], createElement: () => ({}), head: { appendChild: (n) => added.push(n) } },
+    document: { documentElement: { setAttribute() {} }, querySelectorAll: () => [], querySelector: (q) => (canonical && q === 'link[rel="canonical"]' ? { href: canonical } : null), createElement: () => ({}), head: { appendChild: (n) => added.push(n) } },
     Object,
   };
   vm.runInNewContext(js, ctx);
@@ -226,6 +226,18 @@ test('head: Vercel Web Analytics loads on mohamedgado.com only, and ?s= becomes 
   assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go?s=IG'), 'https://www.mohamedgado.com/projects/rafiq/go?s=IG&utm_source=ig');
   assert.equal(url('https://www.mohamedgado.com/projects/rafiq/privacy#en-10'), 'https://www.mohamedgado.com/projects/rafiq/privacy#en-10', 'no tag, untouched');
   assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go?s=x&utm_source=y'), 'https://www.mohamedgado.com/projects/rafiq/go?s=x&utm_source=y', 'an explicit utm wins');
+  // rafiq.mohamedgado.com serves its install page in place since 7 Nov: its pageviews count under
+  // the canonical www page (not as `/`, mixed with the portfolio home), and ?s= still tags them.
+  const go = 'https://www.mohamedgado.com/projects/rafiq/go';
+  const sub = runHead('rafiq.mohamedgado.com', go);
+  assert.deepEqual(sub.added.map((n) => n.src), ['/_vercel/insights/script.js']);
+  const subUrl = (u) => sub.win.vaq[0][1]({ type: 'pageview', url: u }).url;
+  assert.equal(subUrl('https://rafiq.mohamedgado.com/?s=IG'), go + '?s=IG&utm_source=ig');
+  assert.equal(subUrl('https://rafiq.mohamedgado.com/'), go);
+  assert.equal(subUrl('https://rafiq.mohamedgado.com/go#x'), go + '#x');
+  const ar = runHead('rafiq.mohamedgado.com', go + '-ar');
+  assert.equal(ar.win.vaq[0][1]({ type: 'pageview', url: 'https://rafiq.mohamedgado.com/ar?s=tt' }).url, go + '-ar?s=tt&utm_source=tt');
+  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go-ar'), 'https://www.mohamedgado.com/projects/rafiq/go-ar', 'www untouched');
   // The policy says so, in both languages, and no page still claims to run none.
   const policy = readPage('index.html');
   assert.doesNotMatch(policy, /runs no analytics|ولا تشغّل أي قياس/, 'the policy still says no analytics');
