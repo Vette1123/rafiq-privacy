@@ -15,6 +15,8 @@ export const SOCIAL = [
   { key: 'tiktok', who: 'owner', url: 'https://www.tiktok.com/@vetteop' },
   { key: 'x', who: 'owner', url: 'https://x.com/Sadge1996' },
   { key: 'linkedin', who: 'owner', url: 'https://www.linkedin.com/in/mgado' },
+  // Mohamed Gado's portfolio: the site these pages live on. Not a profile, so no sameAs.
+  { key: 'portfolio', who: 'site', url: 'https://www.mohamedgado.com/' },
 ];
 
 const STORES = ['https://apps.apple.com/app/id6806678979', 'https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq'];
