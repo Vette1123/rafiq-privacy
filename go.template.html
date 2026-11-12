@@ -130,6 +130,9 @@
       /* ---- more inside: the rest of the app, named so search reads it ---- */
       .more { padding-block: 64px 16px; }
       .more p { margin-top: 12px; color: var(--soft); max-width: 60ch; }
+      .hubs { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+      .hubs a { color: var(--gold); font-weight: 700; text-decoration: none; }
+      .hubs a:hover { text-decoration: underline; }
       .chips li { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-weight: 600; font-size: 15px; }
 
       /* Below the first screen: skip layout and paint until it is near, so a low-end phone
@@ -211,6 +214,7 @@
         <h2>{{MORE_H}}</h2>
         <p>{{MORE_P}}</p>
         <ul class="chips">{{MORE}}</ul>
+        <p class="hubs">{{HUBS}}</p>
       </section>
 
       <section class="band">

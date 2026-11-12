@@ -10,3 +10,4 @@
 | 2026-11-07 | [Social links, sameAs](2026-11-07-social-links-sameas.md) | Social links in the footer, profiles in sameAs. |
 | 2026-11-07 | [Subdomain pageviews](2026-11-07-subdomain-pageviews.md) | Subdomain pageviews log under their canonical page. |
 | 2026-11-10 | [Policy breadcrumb](2026-11-10-policy-breadcrumb.md) | The JSON-LD trail matches the first visible trail, pinned by a test on the real page. |
+| 2026-11-12 | [Reciter and feature pages](2026-11-12-reciter-feature-pages.md) | Generated Arabic reciter and feature pages, linked from the install page; the site repo only holds the output. |

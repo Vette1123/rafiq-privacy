@@ -143,6 +143,7 @@ function page(l) {
     MORE_H: esc(t.moreH),
     MORE_P: esc(t.moreP),
     MORE: t.more.map((m) => `<li>${esc(m)}</li>`).join(''),
+    HUBS: t.hubs.map(([name, u]) => `<a href="${u}">${esc(name)}</a>`).join(''),
     PRIV_H: esc(t.privH),
     PRIV_P: esc(t.privP),
     PRIV: t.priv.map((p) => `<li>${esc(p)}</li>`).join(''),
