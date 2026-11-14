@@ -16,6 +16,11 @@ const PAGES = {
   '404.html': [...SITE, 'footer.en.html'],
 };
 
+// The generated Arabic pages (made in the app repo) carry the same footer markers: refresh them too.
+for (const dir of ['features', 'reciters']) {
+  for (const f of fs.readdirSync(path.join(repo, dir)).filter((n) => n.endsWith('.html'))) PAGES[`${dir}/${f}`] = [...SITE, 'footer.ar.html'];
+}
+
 const build = (html, require) =>
   applyPartials(html, { require }).replace(/<style>([\s\S]*?)<\/style>/g, (_, c) => `<style>${css(c)}</style>`);
 
