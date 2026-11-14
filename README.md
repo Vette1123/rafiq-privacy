@@ -178,7 +178,7 @@ labels are section 5 of `docs/APPLE-SUBMISSION.md`. Change them with this page.
 
 ## Contact
 
-boogado@yahoo.com
+booogado@gmail.com
 
 ## The tashkīl layer
 
