@@ -59,3 +59,17 @@ export const css = (c) => c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' '
 
 // The markers a page carries, ready to paste into a template.
 export const slot = (name) => `<!--partial:${name}--><!--/partial:${name}-->`;
+
+// Reciter and feature pages are served twice: on www (proxied, canonical) and on github.io (old
+// links, crawlers). With absolute www image URLs every crawl of a github.io copy was a billed
+// Vercel CDN request: Rafiq's go-img was ~1K requests per 12 hours on 17 Nov, and the Hobby plan
+// pauses at 1M a month. A relative URL loads from whichever host served the page. `file` is the
+// page's path in this repo (reciters/x.html). index.html keeps www: www serves it without the
+// trailing slash (/projects/rafiq/reciters), so a relative path would resolve one level too high.
+// Only src/srcset change; meta and JSON-LD stay absolute.
+const WWW_IMG = 'https://www.mohamedgado.com/projects/rafiq/go-img/';
+export function localImages(html, file) {
+  if (!/^(reciters|features)\//.test(file) || file.endsWith('/index.html')) return html;
+  const local = `${'../'.repeat(file.split('/').length - 1)}go-img/`;
+  return html.replace(/\b(src|srcset)="([^"]*)"/g, (_, attr, v) => `${attr}="${v.replaceAll(WWW_IMG, local)}"`);
+}

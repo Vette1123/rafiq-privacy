@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import { markCurrent, applyPartials, css, SITE } from './partials.mjs';
+import { markCurrent, applyPartials, css, localImages, SITE } from './partials.mjs';
 
 const B = 'https://www.mohamedgado.com/projects/rafiq';
 const page = (canon, extra = '') => `<link rel="canonical" href="${canon}" />${extra}<nav class="topnav"><a href="${B}/go">Download</a><a href="${B}/go-ar">AR</a><a href="${B}/privacy">Privacy</a></nav><footer class="sitefoot"><a href="${B}/privacy">Policy</a><a href="${B}">About</a></footer>`;
@@ -312,4 +312,22 @@ test('the policy page carries a BreadcrumbList that matches its first visible tr
   assert.equal(trails.length, 2, 'one trail per language');
   const visible = [...trails[0].matchAll(/<li[^>]*>(?:<a [^>]*>)?([^<]+)/g)].map((m) => m[1]);
   assert.deepEqual(visible, items.map((i) => i.name));
+});
+
+test('a reciter or feature page loads its images from the host that served it', () => {
+  const IMG = `${B}/go-img/`;
+  const html = `<meta property="og:image" content="${IMG}og.png" /><img src="${IMG}app-store-ar.svg" /><source srcset="${IMG}a-480.avif 480w, ${IMG}a-720.avif 720w" />`;
+  // reciters/x is /projects/rafiq/reciters/x on www and /rafiq-privacy/reciters/x on github.io:
+  // one level up is go-img/ on both, so a crawl of the github.io copy never bills Vercel.
+  const ar = localImages(html, 'reciters/mishary.html');
+  assert.match(ar, /<img src="\.\.\/go-img\/app-store-ar\.svg"/);
+  assert.match(ar, /srcset="\.\.\/go-img\/a-480\.avif 480w, \.\.\/go-img\/a-720\.avif 720w"/);
+  // Meta and JSON-LD images stay absolute: they are read off the page, not resolved against it.
+  assert.ok(ar.includes(`content="${IMG}og.png"`));
+  assert.match(localImages(html, 'features/radio.html'), /src="\.\.\/go-img\/app-store-ar\.svg"/);
+  // www serves an index without its trailing slash (/projects/rafiq/reciters): relative would miss.
+  assert.equal(localImages(html, 'reciters/index.html'), html);
+  assert.equal(localImages(html, 'features/index.html'), html);
+  assert.equal(localImages(html, 'go.html'), html);
+  assert.equal(localImages(ar, 'reciters/mishary.html'), ar);
 });

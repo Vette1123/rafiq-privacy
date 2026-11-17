@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { applyPartials, css, SITE } from './partials.mjs';
+import { applyPartials, css, localImages, SITE } from './partials.mjs';
 
 const repo = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = {
@@ -30,7 +30,8 @@ for (const [file, require] of Object.entries(PAGES)) {
   const p = path.join(repo, file);
   // A Windows checkout holds CRLF (core.autocrlf); compare as git stores it, or every page reads stale.
   const old = fs.readFileSync(p, 'utf8').replace(/\r\n/g, '\n');
-  const next = build(old, require);
+  // localImages: reciter and feature pages load images from whichever host served them (partials.mjs says why).
+  const next = localImages(build(old, require), file);
   if (next === old) continue;
   stale.push(file);
   if (!check) fs.writeFileSync(p, next);
