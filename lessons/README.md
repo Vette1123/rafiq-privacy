@@ -13,3 +13,4 @@
 | 2026-11-12 | [Reciter and feature pages](2026-11-12-reciter-feature-pages.md) | Generated Arabic reciter and feature pages, linked from the install page; the site repo only holds the output. |
 | 2026-11-14 | [Contact email moved to Gmail](2026-11-14-contact-email-gmail.md) | Exclude paths with `:(exclude)`, never `:!_`; generators and their output change together |
 | 2026-11-14 | [SEO polish](2026-11-14-seo-polish.md) | One SEO/link check pins titles, hreflang, JSON-LD and sibling-app links; footers regenerate on every page. |
+| 2026-11-17 | [Landing features and images on www](2026-11-17-landing-features-and-images.md) | New app features join `more` (and so `featureList`); every image URL is www go-img. |

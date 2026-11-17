@@ -10,7 +10,6 @@ const c = JSON.parse(fs.readFileSync(path.join(repo, 'go.copy.json'), 'utf8'))
 // Canonical on the domain Google crawls, which proxies these pages. The github.io URLs keep
 // serving: printed QR codes open them, and they cannot be updated.
 const base = `https://www.mohamedgado.com/projects/${c.slug}/`
-const site = `https://vette1123.github.io/${c.slug}-privacy/`
 // Pictures load from github.io on both hosts: the proxy only maps the pages.
 // Same origin as the page on www (portfolio-v1 proxies and edge-caches go-img/): no second
 // connection before the hero image, and one cache for every page.
@@ -41,10 +40,12 @@ function ld(l) {
     downloadUrl: [c.apple, c.play],
     installUrl: base + (l === 'ar' ? 'go-ar' : 'go'),
     sameAs: APP_SAME_AS,
-    image: site + 'icon.png',
+    image: img + 'icon-512.png',
     screenshot: t.features.map(([f]) => `${img}${f}-720.webp`),
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    featureList: t.features.map(([, , h]) => h),
+    // The "more inside" list too: the five headline features left du'a search and
+    // share-as-video out of the markup while the page showed them.
+    featureList: [...t.features.map(([, , h]) => h), ...t.more],
     author: { '@id': 'https://www.mohamedgado.com/#person' },
     publisher: { '@id': 'https://www.mohamedgado.com/#person' },
   }
@@ -87,14 +88,14 @@ function page(l) {
     `<meta property="og:site_name" content="${esc(t.ldName)}" />`,
     `<meta property="og:locale" content="${l === 'ar' ? 'ar_EG' : 'en_US'}" />`,
     `<meta property="og:locale:alternate" content="${l === 'ar' ? 'en_US' : 'ar_EG'}" />`,
-    `<meta property="og:image" content="${site}${c.image}" />`,
+    `<meta property="og:image" content="${img}${c.image}" />`,
     `<meta property="og:image:width" content="2400" />`,
     `<meta property="og:image:height" content="1260" />`,
     `<meta property="og:image:alt" content="${esc(t.ogAlt)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(t.title)}" />`,
     `<meta name="twitter:description" content="${esc(t.description)}" />`,
-    `<meta name="twitter:image" content="${site}${c.image}" />`,
+    `<meta name="twitter:image" content="${img}${c.image}" />`,
     `<meta name="twitter:image:alt" content="${esc(t.ogAlt)}" />`,
     `<meta name="apple-itunes-app" content="app-id=${c.appleId}" />`,
     `<link rel="preconnect" href="https://www.mohamedgado.com" />`,

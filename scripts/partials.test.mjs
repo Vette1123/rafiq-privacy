@@ -63,7 +63,8 @@ test('theme: the current nav item is clearly marked', async () => {
   const { readFileSync } = await import('node:fs');
   const theme = readFileSync(new URL('../partials/theme.css', import.meta.url), 'utf8');
   const on = theme.match(/\.topnav a\[aria-current\]\s*\{([^}]*)\}/)?.[1] ?? '';
-  assert.match(on, /color:\s*var\(--gold\)/);
+  // Gold leads the colour. 17 Nov mixed ink in so light theme clears 4.5:1 (4.45 before).
+  assert.match(on, /(?:^|;)\s*color:\s*(?:var\(--gold\)|color-mix\(in srgb, var\(--gold\) \d+%, var\(--ink\)\))/);
   assert.match(on, /inset 0 0 0 1px/);
   assert.match(theme, /\.topnav a\[aria-current\]::before\s*\{[^}]*border-radius:\s*50%/);
 });
