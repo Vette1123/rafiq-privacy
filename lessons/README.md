@@ -15,3 +15,4 @@
 | 2026-11-14 | [SEO polish](2026-11-14-seo-polish.md) | One SEO/link check pins titles, hreflang, JSON-LD and sibling-app links; footers regenerate on every page. |
 | 2026-11-17 | [Landing features and images on www](2026-11-17-landing-features-and-images.md) | New app features join `more` (and so `featureList`); every image URL is www go-img. |
 | 2026-11-17 | [Reciter and feature pages load images from the host that served them](2026-11-17-relative-page-images.md) | Pages served from two hosts get relative asset URLs; index pages stay absolute. |
+| 2026-11-17 | [build-go runs from any folder](2026-11-17-build-go-cwd.md) | Scripts resolve the repo from import.meta.url, never cwd; --check compares through CRLF normalisation. |
