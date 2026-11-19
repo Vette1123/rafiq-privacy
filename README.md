@@ -89,8 +89,8 @@ change log.
 
 - **Self-contained.** No web fonts, no CDN, no scripts from other hosts, no cookies.
 - **Counted, not tracked.** On mohamedgado.com (which proxies these pages) `partials/head.html`
-  sends one cookieless pageview beacon to `www.mohamedgado.com/ingest/e`, which forwards it to PostHog
-  EU, so visits show in its dashboard; a link's `?s=` arrives as `utm_source`. The github.io copies load nothing. The policy
+  loads www's shared tracker (`https://www.mohamedgado.com/t.js`, cookieless PostHog EU: pageviews, time
+  on page, clicks, errors), so visits show in its dashboard; a link's `?s=` arrives as `utm_source`. The github.io copies load nothing. The policy
   says so in section 10 and the page footer; keep them in step if this ever changes.
 - **Header:** one partial (`partials/header.html` + `header.js`), sticky, hides going down and
   slides back going up. It must sit directly in `<body>` or `position: sticky` does nothing.

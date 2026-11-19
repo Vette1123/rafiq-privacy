@@ -196,57 +196,38 @@ test('header.js: hides going down, returns going up, ignores jitter and keeps fo
   assert.deepEqual(to(0), { stuck: false, hidden: false });
 });
 
-// Visits were invisible: mohamedgado.com proxies these pages from github.io, so they never got the
-// portfolio's own analytics. The head sends one cookieless pageview beacon to the portfolio's
-// PostHog ingest on that host only (the Vercel script 404s since the Cloudflare move).
-function runHead(hostname, { canonical, search = '', webdriver = false, stored = {}, ua = 'Mozilla/5.0 Chrome/130' } = {}) {
+// Visits were invisible: mohamedgado.com proxies these pages from github.io. The head now loads
+// www's shared tracker (/t.js: pageviews, time on page, clicks, errors) on mohamedgado.com hosts only.
+function runHead(hostname) {
   const js = readPartial('head.html').match(/<script>([\s\S]*?)<\/script>/)[1];
-  const beacons = [];
-  const store = { ...stored };
-  const href = 'https://' + hostname + '/' + search;
+  const added = [];
   const ctx = {
-    window: {}, location: { hostname, search, href },
-    localStorage: { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = v; }, removeItem: (k) => { delete store[k]; } },
-    navigator: { webdriver, userAgent: ua, language: 'en', sendBeacon: (u, b) => { beacons.push({ url: u, body: JSON.parse(b) }); return true; } },
-    document: { referrer: '', documentElement: { setAttribute() {} }, querySelectorAll: () => [], querySelector: (q) => (canonical && q === 'link[rel="canonical"]' ? { href: canonical } : null) },
-    screen: { width: 1, height: 1 }, innerWidth: 1, innerHeight: 1,
-    Intl, URL, URLSearchParams, Date, JSON, fetch: () => ({ catch() {} }),
+    window: {}, location: { hostname },
+    localStorage: { getItem: () => null },
+    document: { documentElement: { setAttribute() {} }, querySelectorAll: () => [], createElement: () => ({}), head: { appendChild: (n) => added.push(n) } },
   };
   vm.runInNewContext(js, ctx);
-  return { beacons, store };
+  return added;
 }
 
-test('head: one cookieless PostHog pageview beacon on mohamedgado.com only, and ?s= becomes utm_source', () => {
+test('head: the shared PostHog tracker loads async from www on mohamedgado.com hosts only', () => {
   for (const host of ['vette1123.github.io', 'localhost', 'mohamedgado.com.evil.example']) {
-    assert.equal(runHead(host).beacons.length, 0, host + ' sends nothing');
+    assert.equal(runHead(host).length, 0, host + ' loads nothing');
   }
-  for (const host of ['www.mohamedgado.com', 'mohamedgado.com']) {
-    const [b] = runHead(host).beacons;
-    assert.equal(b.url, 'https://www.mohamedgado.com/ingest/e', host + ': absolute www ingest');
-    assert.equal(b.body.event, '$pageview');
-    assert.equal(b.body.properties.$cookieless_mode, true);
-    assert.equal(b.body.properties.app, 'rafiq');
+  for (const host of ['www.mohamedgado.com', 'mohamedgado.com', 'rafiq.mohamedgado.com']) {
+    const added = runHead(host);
+    assert.equal(added.length, 1, host + ' loads one script');
+    assert.equal(added[0].src, 'https://www.mohamedgado.com/t.js');
+    assert.equal(added[0].async, true);
   }
-  const tag = (s) => runHead('www.mohamedgado.com', { search: s }).beacons[0].body.properties.utm_source;
-  assert.equal(tag('?s=IG'), 'ig');
-  assert.equal(tag('?s=x&utm_source=y'), 'y', 'an explicit utm wins');
-  assert.equal(tag(''), undefined, 'no tag, none sent');
-  // rafiq.mohamedgado.com serves its install page in place: it counts under the canonical www page.
-  const go = 'https://www.mohamedgado.com/projects/rafiq/go';
-  const sub = runHead('rafiq.mohamedgado.com', { canonical: go, search: '?s=IG' }).beacons[0].body.properties;
-  assert.equal(sub.$current_url, go + '?s=IG');
-  assert.equal(sub.$host, 'www.mohamedgado.com');
-  assert.equal(sub.utm_source, 'ig');
-  // The owner opt-out, and lab agents, send nothing.
-  assert.equal(runHead('www.mohamedgado.com', { stored: { 'va-ignore': '1' } }).beacons.length, 0);
-  assert.equal(runHead('www.mohamedgado.com', { search: '?va-ignore=1' }).beacons.length, 0);
-  assert.equal(runHead('www.mohamedgado.com', { webdriver: true }).beacons.length, 0);
-  assert.equal(runHead('www.mohamedgado.com', { ua: 'Mozilla/5.0 HeadlessChrome' }).beacons.length, 0);
-  assert.doesNotMatch(readPartial('head.html'), /_vercel/, 'the Vercel script is gone');
+  const head = readPartial('head.html');
+  assert.ok(head.includes(String.raw`/(^|\.)mohamedgado\.com$/.test(location.hostname)`), 'host gate regex');
+  assert.doesNotMatch(head, /ingest\/e|_vercel/, 'no inline beacon, no Vercel script');
   // The policy says so, in both languages, and no page still claims to run none.
   const policy = readPage('index.html');
   assert.doesNotMatch(policy, /runs no analytics|ولا تشغّل أي قياس/, 'the policy still says no analytics');
-  assert.match(policy, /counted,\s+without cookies,\s+by\s+PostHog analytics on EU servers/);
+  assert.match(policy, /counted,\s+without cookies,\s+by\s+<strong>PostHog analytics on EU servers/);
+  assert.match(policy, /how long it stayed open and how\s+far it was scrolled/);
   assert.match(policy, /تُعدّ الزيارة بلا كوكيز عبر تحليلات PostHog على خوادم في الاتحاد الأوروبي/);
   assert.match(policy, /<h3>This website<\/h3>/);
   assert.match(policy, /<h3>هذا الموقع<\/h3>/);

@@ -21,62 +21,16 @@
           document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.content = t === 'dark' ? '#07101f' : '#f4f6fa'; });
         }
       } catch (e) {}
-      // Visits on mohamedgado.com, which proxies every page here, count in its own cookieless
-      // analytics: one pageview beacon to www.mohamedgado.com/ingest/e, which forwards it to
-      // PostHog EU (the path the portfolio's own pages use). The github.io copies send nothing.
-      // Absolute www URL: on the app subdomain /ingest/e answers 301 and a beacon never follows it.
-      // A link's ?s=<source> (rafiq.mohamedgado.com/?s=ig) arrives as utm_source. The owner's
-      // opt-out (?va-ignore=1, same key as the portfolio) and lab/headless agents send nothing.
+      // PostHog: on mohamedgado.com (www and the app subdomains) every page loads www's /t.js,
+      // the same tracker the portfolio runs (lib/tracker-entry.ts there): pageviews, time on page
+      // and scroll depth, link and button clicks, store and download clicks, errors. Cookieless,
+      // EU servers, through www's own ingest path. ?s=<source> on a link arrives as
+      // utm_source. The github.io copies load nothing.
       if (/(^|\.)mohamedgado\.com$/.test(location.hostname)) {
-        try {
-          var optOut = false;
-          try {
-            var flag = new URLSearchParams(location.search).get('va-ignore');
-            if (flag === '1') localStorage.setItem('va-ignore', '1');
-            if (flag === '0') localStorage.removeItem('va-ignore');
-            optOut = localStorage.getItem('va-ignore') === '1';
-          } catch (e) {}
-          var lab = navigator.webdriver || /Chrome-Lighthouse|HeadlessChrome|PTST|GTmetrix/i.test(navigator.userAgent);
-          if (!optOut && !lab) {
-            // The subdomain install page serves in place; it counts under its canonical www URL.
-            var c = location.hostname !== 'www.mohamedgado.com' && document.querySelector('link[rel="canonical"]');
-            var url = c ? c.href + location.search : location.href.replace(/#.*$/, '');
-            var u = new URL(url);
-            var props = {
-              $current_url: url,
-              $host: u.host,
-              $pathname: u.pathname,
-              $referrer: document.referrer || '$direct',
-              $raw_user_agent: navigator.userAgent,
-              $browser_language: navigator.language,
-              $timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-              $screen_width: screen.width,
-              $screen_height: screen.height,
-              $viewport_width: innerWidth,
-              $viewport_height: innerHeight,
-              $lib: 'web-beacon',
-              area: 'traffic',
-              app: 'rafiq',
-              $cookieless_mode: true,
-              $process_person_profile: false
-            };
-            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
-              var v = u.searchParams.get(k);
-              if (v) props[k] = v;
-            });
-            var s = /^[a-z0-9_-]{1,40}$/i.exec(u.searchParams.get('s') || '');
-            if (s && !props.utm_source) props.utm_source = s[0].toLowerCase();
-            var body = JSON.stringify({
-              api_key: 'phc_mTuqCSZxECXYHxrPbEK5bXkxKUpEG32frvfZNsaMS6U7',
-              event: '$pageview',
-              distinct_id: '$posthog_cookieless',
-              timestamp: new Date().toISOString(),
-              properties: props
-            });
-            var sent = navigator.sendBeacon && navigator.sendBeacon('https://www.mohamedgado.com/ingest/e', body);
-            if (!sent) fetch('https://www.mohamedgado.com/ingest/e', { method: 'POST', body: body, keepalive: true, mode: 'no-cors' }).catch(function () {});
-          }
-        } catch (e) {}
+        var t = document.createElement('script');
+        t.src = 'https://www.mohamedgado.com/t.js';
+        t.async = true;
+        document.head.appendChild(t);
       }
     </script><!--/partial:head.html-->
     <!--partial:lang-pick.js--><script>
@@ -148,7 +102,7 @@
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber#webpage","url":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber","name":"القرآن الكريم بصوت علي جابر بدون إنترنت | رفيق","description":"استمع إلى القرآن الكريم كاملًا بصوت علي جابر في تطبيق رفيق، آيةً بآية، واحفظ ما تشغّله للاستماع دون إنترنت. مجاني وبلا إعلانات ولا حسابات.","inLanguage":"ar","breadcrumb":{"@id":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber#breadcrumb"},"mainEntity":{"@id":"https://www.mohamedgado.com/projects/rafiq/go-ar#app"},"about":{"@id":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber#reciter"}},{"@type":"Person","@id":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber#reciter","name":"علي جابر","alternateName":"Ali Jaber","description":"قارئ سعودي وإمام الحرم المكي سابقًا","nationality":{"@type":"Country","name":"السعودية"},"birthDate":"1954","deathDate":"2005","sameAs":["https://www.wikidata.org/wiki/Q3093361","https://ar.wikipedia.org/wiki/علي_عبد_الله_جابر"]},{"@type":"MobileApplication","@id":"https://www.mohamedgado.com/projects/rafiq/go-ar#app","name":"رفيق — Rafiq","operatingSystem":"Android, iOS","applicationCategory":"LifestyleApplication","url":"https://www.mohamedgado.com/projects/rafiq/go-ar","inLanguage":"ar","publisher":{"@id":"https://www.mohamedgado.com/#person"},"author":{"@id":"https://www.mohamedgado.com/#person"},"image":"https://vette1123.github.io/rafiq-privacy/icon.png","downloadUrl":["https://apps.apple.com/app/id6806678979","https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"تطبيق إسلامي مجاني: مواقيت الصلاة والأذان، والقرآن الكريم بصوت ٤٢ قارئًا، واتجاه القبلة، والأذكار، والتقويم الهجري، بلا إعلانات ولا حسابات."},{"@type":"BreadcrumbList","@id":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"رفيق","item":"https://www.mohamedgado.com/projects/rafiq/go-ar"},{"@type":"ListItem","position":2,"name":"القرّاء","item":"https://www.mohamedgado.com/projects/rafiq/reciters"},{"@type":"ListItem","position":3,"name":"علي جابر","item":"https://www.mohamedgado.com/projects/rafiq/reciters/ali-jaber"}]}]}</script>
   </head>
   <body>
-    <!--partial:header.html--><header class="top">
+    <!--partial:header.html--><header class="top" data-place="header">
   <div class="wrap top-in">
   <a class="brand" lang="en" href="https://www.mohamedgado.com/projects/rafiq/go"><img src="../go-img/icon-96.webp" width="40" height="40" alt="" />Rafiq <small lang="ar">رفيق</small></a>
   <a class="brand" lang="ar" href="https://www.mohamedgado.com/projects/rafiq/go-ar"><img src="../go-img/icon-96.webp" width="40" height="40" alt="" />رفيق <small lang="en">Rafiq</small></a>
@@ -244,7 +198,7 @@
         <p class="meta">مجاني · بلا إعلانات ولا حسابات</p>
       </section>
     </main>
-    <!--partial:footer.ar.html--><footer class="sitefoot wrap" lang="ar" dir="rtl">
+    <!--partial:footer.ar.html--><footer class="sitefoot wrap" lang="ar" dir="rtl" data-place="footer">
       <div class="sf-brand">
         <div>
           <a class="brand" href="https://www.mohamedgado.com/projects/rafiq/go-ar"><img src="../go-img/icon-96.webp" width="40" height="40" alt="" loading="lazy" decoding="async" />رفيق <small lang="en">Rafiq</small></a>
