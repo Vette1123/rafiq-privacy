@@ -197,56 +197,60 @@ test('header.js: hides going down, returns going up, ignores jitter and keeps fo
 });
 
 // Visits were invisible: mohamedgado.com proxies these pages from github.io, so they never got the
-// portfolio's <Analytics/>. The head loads Vercel Web Analytics on that host only.
-function runHead(hostname, canonical) {
+// portfolio's own analytics. The head sends one cookieless pageview beacon to the portfolio's
+// PostHog ingest on that host only (the Vercel script 404s since the Cloudflare move).
+function runHead(hostname, { canonical, search = '', webdriver = false, stored = {}, ua = 'Mozilla/5.0 Chrome/130' } = {}) {
   const js = readPartial('head.html').match(/<script>([\s\S]*?)<\/script>/)[1];
-  const added = [];
-  const win = {};
+  const beacons = [];
+  const store = { ...stored };
+  const href = 'https://' + hostname + '/' + search;
   const ctx = {
-    window: win, location: { hostname },
-    localStorage: { getItem: () => null },
-    document: { documentElement: { setAttribute() {} }, querySelectorAll: () => [], querySelector: (q) => (canonical && q === 'link[rel="canonical"]' ? { href: canonical } : null), createElement: () => ({}), head: { appendChild: (n) => added.push(n) } },
-    Object,
+    window: {}, location: { hostname, search, href },
+    localStorage: { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = v; }, removeItem: (k) => { delete store[k]; } },
+    navigator: { webdriver, userAgent: ua, language: 'en', sendBeacon: (u, b) => { beacons.push({ url: u, body: JSON.parse(b) }); return true; } },
+    document: { referrer: '', documentElement: { setAttribute() {} }, querySelectorAll: () => [], querySelector: (q) => (canonical && q === 'link[rel="canonical"]' ? { href: canonical } : null) },
+    screen: { width: 1, height: 1 }, innerWidth: 1, innerHeight: 1,
+    Intl, URL, URLSearchParams, Date, JSON, fetch: () => ({ catch() {} }),
   };
   vm.runInNewContext(js, ctx);
-  return { added, win };
+  return { beacons, store };
 }
 
-test('head: Vercel Web Analytics loads on mohamedgado.com only, and ?s= becomes utm_source', () => {
+test('head: one cookieless PostHog pageview beacon on mohamedgado.com only, and ?s= becomes utm_source', () => {
   for (const host of ['vette1123.github.io', 'localhost', 'mohamedgado.com.evil.example']) {
-    const { added, win } = runHead(host);
-    assert.equal(added.length, 0, `${host} loads nothing`);
-    assert.equal(win.va, undefined);
+    assert.equal(runHead(host).beacons.length, 0, host + ' sends nothing');
   }
   for (const host of ['www.mohamedgado.com', 'mohamedgado.com']) {
-    assert.deepEqual(runHead(host).added.map((n) => n.src), ['/_vercel/insights/script.js'], `${host}: same-origin script`);
+    const [b] = runHead(host).beacons;
+    assert.equal(b.url, 'https://www.mohamedgado.com/ingest/e', host + ': absolute www ingest');
+    assert.equal(b.body.event, '$pageview');
+    assert.equal(b.body.properties.$cookieless_mode, true);
+    assert.equal(b.body.properties.app, 'rafiq');
   }
-  const [kind, beforeSend] = runHead('www.mohamedgado.com').win.vaq[0];
-  assert.equal(kind, 'beforeSend');
-  const url = (u) => beforeSend({ type: 'pageview', url: u }).url;
-  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go?s=IG'), 'https://www.mohamedgado.com/projects/rafiq/go?s=IG&utm_source=ig');
-  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/privacy#en-10'), 'https://www.mohamedgado.com/projects/rafiq/privacy#en-10', 'no tag, untouched');
-  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go?s=x&utm_source=y'), 'https://www.mohamedgado.com/projects/rafiq/go?s=x&utm_source=y', 'an explicit utm wins');
-  // rafiq.mohamedgado.com serves its install page in place since 7 Nov: its pageviews count under
-  // the canonical www page (not as `/`, mixed with the portfolio home), and ?s= still tags them.
+  const tag = (s) => runHead('www.mohamedgado.com', { search: s }).beacons[0].body.properties.utm_source;
+  assert.equal(tag('?s=IG'), 'ig');
+  assert.equal(tag('?s=x&utm_source=y'), 'y', 'an explicit utm wins');
+  assert.equal(tag(''), undefined, 'no tag, none sent');
+  // rafiq.mohamedgado.com serves its install page in place: it counts under the canonical www page.
   const go = 'https://www.mohamedgado.com/projects/rafiq/go';
-  const sub = runHead('rafiq.mohamedgado.com', go);
-  assert.deepEqual(sub.added.map((n) => n.src), ['/_vercel/insights/script.js']);
-  const subUrl = (u) => sub.win.vaq[0][1]({ type: 'pageview', url: u }).url;
-  assert.equal(subUrl('https://rafiq.mohamedgado.com/?s=IG'), go + '?s=IG&utm_source=ig');
-  assert.equal(subUrl('https://rafiq.mohamedgado.com/'), go);
-  assert.equal(subUrl('https://rafiq.mohamedgado.com/go#x'), go + '#x');
-  const ar = runHead('rafiq.mohamedgado.com', go + '-ar');
-  assert.equal(ar.win.vaq[0][1]({ type: 'pageview', url: 'https://rafiq.mohamedgado.com/ar?s=tt' }).url, go + '-ar?s=tt&utm_source=tt');
-  assert.equal(url('https://www.mohamedgado.com/projects/rafiq/go-ar'), 'https://www.mohamedgado.com/projects/rafiq/go-ar', 'www untouched');
+  const sub = runHead('rafiq.mohamedgado.com', { canonical: go, search: '?s=IG' }).beacons[0].body.properties;
+  assert.equal(sub.$current_url, go + '?s=IG');
+  assert.equal(sub.$host, 'www.mohamedgado.com');
+  assert.equal(sub.utm_source, 'ig');
+  // The owner opt-out, and lab agents, send nothing.
+  assert.equal(runHead('www.mohamedgado.com', { stored: { 'va-ignore': '1' } }).beacons.length, 0);
+  assert.equal(runHead('www.mohamedgado.com', { search: '?va-ignore=1' }).beacons.length, 0);
+  assert.equal(runHead('www.mohamedgado.com', { webdriver: true }).beacons.length, 0);
+  assert.equal(runHead('www.mohamedgado.com', { ua: 'Mozilla/5.0 HeadlessChrome' }).beacons.length, 0);
+  assert.doesNotMatch(readPartial('head.html'), /_vercel/, 'the Vercel script is gone');
   // The policy says so, in both languages, and no page still claims to run none.
   const policy = readPage('index.html');
   assert.doesNotMatch(policy, /runs no analytics|ولا تشغّل أي قياس/, 'the policy still says no analytics');
-  assert.match(policy, /Vercel Web\s+Analytics,\s+without cookies/);
-  assert.match(policy, /تُعدّ الزيارة عبر Vercel Web Analytics بلا كوكيز/);
+  assert.match(policy, /counted,\s+without cookies,\s+by\s+PostHog analytics on EU servers/);
+  assert.match(policy, /تُعدّ الزيارة بلا كوكيز عبر تحليلات PostHog على خوادم في الاتحاد الأوروبي/);
   assert.match(policy, /<h3>This website<\/h3>/);
   assert.match(policy, /<h3>هذا الموقع<\/h3>/);
-  assert.equal(policy.split('vercel.com/legal/privacy-policy').length, 3, 'Vercel is in both third-party tables');
+  assert.doesNotMatch(policy, /vercel/i, 'the policy no longer names Vercel');
 });
 
 test('build-pages --check passes on a current checkout, whatever its line endings', async () => {
