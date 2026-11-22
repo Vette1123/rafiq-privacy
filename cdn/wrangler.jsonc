@@ -1,18 +1,27 @@
-// The app's first road to its audio and muṣḥaf fonts: an assets-only Worker, so
-// Cloudflare serves the files straight from its edge and no code runs at all.
-// Requests to static assets are free and unlimited on every plan; the free plan's
-// ceilings are 20,000 files and 25 MiB a file, and cdn/stage.mjs fails the build
-// before either is reached. GitHub Pages and raw.githubusercontent.com stay as the
-// second and third roads (rafiq: lib/net/mirror.ts).
+// Every file the app downloads: audio, recitations and muṣḥaf fonts. The ONE host the
+// app reads them from (rafiq: lib/net/cdn.ts).
 //
-// Deployed by .github/workflows/cdn.yml on every push that touches audio/ or fonts/.
+// Fonts are plain static assets: no code runs, and those requests are free and
+// unlimited on every plan. Audio needs byte ranges, which static assets do not give
+// (a Range request gets the whole file, 200), so /audio/* and /recitations/* run
+// cdn/worker.mjs first. Worker requests are the one metered thing: 100,000 a day on
+// the free plan, against a few hundred plays a day in November 2026.
+// ponytail: past ~30,000 a day, move to Workers Paid ($5, 10M a month) or R2 on a domain.
+//
+// Free-plan ceilings: 20,000 assets a version and 25 MiB an asset; cdn/stage.mjs
+// splits large audio into 2 MiB parts and fails the build before either is reached.
+// Deployed by .github/workflows/cdn.yml.
 {
   "name": "rafiq-cdn",
+  "main": "worker.mjs",
   "compatibility_date": "2026-11-01",
   "workers_dev": true,
   "preview_urls": false,
+  "observability": { "enabled": true },
   "assets": {
     "directory": "../.cdn-dist",
-    "not_found_handling": "none"
+    "binding": "ASSETS",
+    "not_found_handling": "none",
+    "run_worker_first": ["/audio/*", "/recitations/*"]
   }
 }

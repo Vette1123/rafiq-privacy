@@ -1,44 +1,90 @@
 #!/usr/bin/env node
-// Copy what the app downloads (audio/, fonts/) into .cdn-dist for the Worker to serve.
-// Only those two folders: the site pages stay on GitHub Pages, where mohamedgado.com
-// proxies them. Fails before a deploy that Cloudflare would refuse.
-import { cpSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { join, relative } from 'node:path';
+// Stage everything the app downloads into .cdn-dist for the Worker to serve:
+//   audio/, fonts/          from this repo
+//   recitations/            the .mp3 files of Vette1123/rafiq-recitations
+//                           (--recitations <checkout>, default ../rafiq-recitations)
+// The site pages are not here: mohamedgado.com serves them. Fails before a deploy
+// Cloudflare would refuse.
+//
+// An audio file over PART bytes is cut into parts under /_parts/ and its size goes in
+// MANIFEST, which the Worker reads to stitch it back (cdn/worker.mjs).
+import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, sep } from 'node:path';
+
+import { AUDIO, MANIFEST, PART, partPath } from './parts.mjs';
 
 const ROOT = join(import.meta.dirname, '..');
 const OUT = join(ROOT, '.cdn-dist');
-export const SERVED = ['audio', 'fonts'];
 const MAX_FILES = 20_000; // free plan, per Worker version
-const MAX_BYTES = 25 * 1024 * 1024; // per file, every plan
+const MAX_BYTES = 25 * 1024 * 1024; // per asset, every plan
 
 export function* walk(dir) {
   for (const name of readdirSync(dir)) {
+    if (name.startsWith('.')) continue; // .git, .nojekyll
     const p = join(dir, name);
     if (statSync(p).isDirectory()) yield* walk(p);
     else yield p;
   }
 }
 
+/** Every served file: its path on the CDN (`audio/…`, no leading slash) and on disk. */
+export function sources(argv = process.argv.slice(2)) {
+  const at = argv.indexOf('--recitations');
+  const rec = at >= 0 ? argv[at + 1] : join(ROOT, '..', 'rafiq-recitations');
+  const trees = [
+    ['audio', join(ROOT, 'audio'), () => true],
+    ['fonts', join(ROOT, 'fonts'), () => true],
+    ['recitations', rec, (f) => f.endsWith('.mp3')],
+  ];
+  return trees.flatMap(([top, dir, keep]) =>
+    [...walk(dir)]
+      .filter(keep)
+      .map((file) => ({ path: `${top}/${relative(dir, file).split(sep).join('/')}`, file }))
+  );
+}
+
+function put(rel, buf) {
+  const dest = join(OUT, rel);
+  mkdirSync(dirname(dest), { recursive: true });
+  writeFileSync(dest, buf);
+}
+
 if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
   rmSync(OUT, { recursive: true, force: true });
-  let files = 0;
-  let bytes = 0;
-  for (const top of SERVED) {
-    for (const file of walk(join(ROOT, top))) {
-      const size = statSync(file).size;
-      if (size > MAX_BYTES) throw new Error(`${relative(ROOT, file)} is ${size} bytes, over 25 MiB`);
-      files += 1;
-      bytes += size;
-    }
-    cpSync(join(ROOT, top), join(OUT, top), { recursive: true });
+  const list = sources();
+  if (!list.some((s) => s.path.startsWith('recitations/'))) {
+    throw new Error('no recitations found: pass --recitations <rafiq-recitations checkout>');
   }
-  if (files + 1 > MAX_FILES) throw new Error(`${files} files, over the ${MAX_FILES} a version allows`);
-  // The app keeps every file it downloads on disk, so this only governs the edge and
-  // any other client. A day, not a year: a clip re-mastered in place under its old
-  // name must reach the next phone within a day, not never.
+  const sizes = {};
+  let assets = 0;
+  let bytes = 0;
+  for (const { path, file } of list) {
+    const size = statSync(file).size;
+    bytes += size;
+    const isAudio = AUDIO.includes(path.split('/')[0]);
+    if (isAudio && size > PART) {
+      const buf = readFileSync(file);
+      for (let i = 0; i * PART < size; i++) {
+        put(partPath(`/${path}`, i).slice(1), buf.subarray(i * PART, (i + 1) * PART));
+        assets += 1;
+      }
+      sizes[`/${path}`] = size;
+      continue;
+    }
+    if (size > MAX_BYTES) throw new Error(`${path} is ${size} bytes, over 25 MiB`);
+    mkdirSync(dirname(join(OUT, path)), { recursive: true });
+    copyFileSync(file, join(OUT, path));
+    assets += 1;
+  }
+  if (assets + 2 > MAX_FILES) throw new Error(`${assets} assets, over the ${MAX_FILES} a version allows`);
+  // Fonts only: audio answers from the Worker, which sets its own headers.
   writeFileSync(
     join(OUT, '_headers'),
     '/*\n  Cache-Control: public, max-age=86400\n  Access-Control-Allow-Origin: *\n'
   );
-  console.log(`staged ${files} files, ${(bytes / 1048576).toFixed(1)} MB from ${SERVED.join(', ')}`);
+  put(MANIFEST.slice(1), JSON.stringify(sizes));
+  console.log(
+    `staged ${list.length} files (${(bytes / 1048576).toFixed(1)} MB) as ${assets} assets; ` +
+      `${Object.keys(sizes).length} split into ${PART / 1048576} MiB parts`
+  );
 }
