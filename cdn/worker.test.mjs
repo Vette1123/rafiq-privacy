@@ -126,3 +126,9 @@ test('versioned fonts cache for a year, config.json for five minutes', async () 
   assert.match(block('/fonts/*'), /Cache-Control: public, max-age=31536000, immutable/);
   assert.match(block('/config.json'), /Cache-Control: public, max-age=300/);
 });
+
+test('a recitation never changes, so it caches for a year; a dhikr clip can be re-mastered', async () => {
+  const { cacheControl } = await import('./worker.mjs');
+  assert.equal(cacheControl('/recitations/saud-aljumah/1446/020.mp3'), 'public, max-age=31536000, immutable');
+  assert.equal(cacheControl('/audio/adhkar/morning-01.mp3'), 'public, max-age=86400');
+});

@@ -14,10 +14,17 @@ const HEADERS = {
   'accept-ranges': 'bytes',
   'access-control-allow-origin': '*',
   'access-control-expose-headers': 'content-range, content-length, accept-ranges',
-  // A day: a clip re-mastered in place under its old name reaches the next phone.
-  'cache-control': 'public, max-age=86400',
   'content-type': 'audio/mpeg',
 };
+
+/**
+ * A recitation is a fixed recording (new surahs arrive, none is ever re-cut), so it
+ * caches for a year. Adhkār clips have been re-mastered in place under their old
+ * names, so they keep a day, and the next phone gets the new master.
+ */
+export function cacheControl(path) {
+  return path.startsWith('/recitations/') ? 'public, max-age=31536000, immutable' : 'public, max-age=86400';
+}
 
 /** `bytes=a-b`, `bytes=a-`, `bytes=-n` → [start, end] inclusive; null = whole file; 'bad' = 416. */
 export function parseRange(header, size) {
@@ -98,11 +105,11 @@ export default {
     if (range === 'bad') {
       return new Response(null, {
         status: 416,
-        headers: { ...HEADERS, 'content-range': `bytes */${size}` },
+        headers: { ...HEADERS, 'cache-control': cacheControl(path), 'content-range': `bytes */${size}` },
       });
     }
     const [start, end] = range ?? [0, size - 1];
-    const headers = { ...HEADERS, 'content-length': String(end - start + 1) };
+    const headers = { ...HEADERS, 'cache-control': cacheControl(path), 'content-length': String(end - start + 1) };
     if (range) headers['content-range'] = `bytes ${start}-${end}/${size}`;
     const status = range ? 206 : 200;
     if (request.method === 'HEAD') return new Response(null, { status, headers });
