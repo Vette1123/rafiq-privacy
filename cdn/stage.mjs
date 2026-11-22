@@ -36,11 +36,16 @@ export function sources(argv = process.argv.slice(2)) {
     ['fonts', join(ROOT, 'fonts'), () => true],
     ['recitations', rec, (f) => f.endsWith('.mp3')],
   ];
-  return trees.flatMap(([top, dir, keep]) =>
-    [...walk(dir)]
-      .filter(keep)
-      .map((file) => ({ path: `${top}/${relative(dir, file).split(sep).join('/')}`, file }))
-  );
+  // The app's minimum supported versions (rafiq lib/updates/minVersion.ts).
+  const config = { path: 'config.json', file: join(ROOT, 'cdn', 'config.json') };
+  return [
+    config,
+    ...trees.flatMap(([top, dir, keep]) =>
+      [...walk(dir)]
+        .filter(keep)
+        .map((file) => ({ path: `${top}/${relative(dir, file).split(sep).join('/')}`, file }))
+    ),
+  ];
 }
 
 function put(rel, buf) {
@@ -77,10 +82,12 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
     assets += 1;
   }
   if (assets + 2 > MAX_FILES) throw new Error(`${assets} assets, over the ${MAX_FILES} a version allows`);
-  // Fonts only: audio answers from the Worker, which sets its own headers.
+  // Fonts and config.json: audio answers from the Worker, which sets its own headers.
   writeFileSync(
     join(OUT, '_headers'),
-    '/*\n  Cache-Control: public, max-age=86400\n  Access-Control-Allow-Origin: *\n'
+    '/*\n  Cache-Control: public, max-age=86400\n  Access-Control-Allow-Origin: *\n' +
+      // Five minutes, so a raised minimum version reaches phones within the hour.
+      '/config.json\n  ! Cache-Control\n  Cache-Control: public, max-age=300\n'
   );
   put(MANIFEST.slice(1), JSON.stringify(sizes));
   console.log(

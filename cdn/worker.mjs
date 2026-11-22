@@ -33,22 +33,32 @@ export function parseRange(header, size) {
   return end < start ? 'bad' : [start, end];
 }
 
-/** Bytes [from, to] of `body` into `writer`; the rest of `body` is cancelled. */
-async function copySlice(body, writer, from, to) {
-  const reader = body.getReader();
+/** Passes bytes [from, to] of a stream through, then stops reading it. */
+function slicer(from, to) {
   let at = 0;
-  try {
-    while (at <= to) {
-      const { done, value } = await reader.read();
-      if (done) throw new Error(`part ended at ${at}, wanted ${to + 1}`);
+  return new TransformStream({
+    transform(chunk, out) {
       const lo = Math.max(from - at, 0);
-      const hi = Math.min(to - at + 1, value.byteLength);
-      if (lo < hi) await writer.write(value.subarray(lo, hi));
-      at += value.byteLength;
-    }
-  } finally {
-    reader.cancel().catch(() => {});
-  }
+      const hi = Math.min(to - at + 1, chunk.byteLength);
+      if (lo < hi) out.enqueue(chunk.subarray(lo, hi));
+      at += chunk.byteLength;
+      if (at > to) out.terminate(); // cancels the rest of the part
+    },
+    flush() {
+      if (at <= to) throw new Error(`part ended at ${at}, wanted ${to + 1}`);
+    },
+  });
+}
+
+/**
+ * The response body. A FixedLengthStream on Workers: it sends content-length, which a
+ * plain stream loses, so a body cut short is an error the player sees instead of a
+ * file that looks whole. Node (the tests) has no FixedLengthStream.
+ */
+function bodyStream(length) {
+  return typeof FixedLengthStream === 'function'
+    ? new FixedLengthStream(length)
+    : new TransformStream();
 }
 
 /** The split files' sizes, read once per isolate (a few KB; stage.mjs writes it). */
@@ -97,8 +107,10 @@ export default {
     const status = range ? 206 : 200;
     if (request.method === 'HEAD') return new Response(null, { status, headers });
 
-    const { readable, writable } = new TransformStream();
-    const writer = writable.getWriter();
+    // A part the range covers whole is piped natively; only the two edge parts run
+    // the slicer. The free plan allows 10 ms of CPU a request, and copying a 57 MB
+    // surah chunk by chunk in JS spent it.
+    const { readable, writable } = bodyStream(end - start + 1);
     (async () => {
       let offset = 0;
       for (const [p, bytes] of pieces) {
@@ -108,10 +120,13 @@ export default {
         if (lo > end) break;
         const res = await asset(p);
         if (res.status !== 200) throw new Error(`${p}: HTTP ${res.status}`);
-        await copySlice(res.body, writer, Math.max(start - lo, 0), Math.min(end - lo, bytes - 1));
+        const from = Math.max(start - lo, 0);
+        const to = Math.min(end - lo, bytes - 1);
+        const body = from === 0 && to === bytes - 1 ? res.body : res.body.pipeThrough(slicer(from, to));
+        await body.pipeTo(writable, { preventClose: true });
       }
-      await writer.close();
-    })().catch((e) => writer.abort(e));
+      await writable.close();
+    })().catch((e) => writable.abort(e).catch(() => {}));
     return new Response(readable, { status, headers });
   },
 };
