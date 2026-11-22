@@ -15,5 +15,5 @@ export const partPath = (path, i) => `/_parts${path}/${i}`;
 /** Folders whose files are audio: streamed, seeked, so served through the Worker. */
 export const AUDIO = ['audio', 'recitations'];
 
-/** The split files' sizes, `{ "/recitations/…/002.mp3": 59874159 }`, as an asset. */
+/** Every audio file's size, `{ "/recitations/…/002.mp3": 59874159 }`, as an asset. */
 export const MANIFEST = '/_parts/sizes.json';

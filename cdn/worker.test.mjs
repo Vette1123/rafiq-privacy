@@ -1,6 +1,8 @@
 // node --test cdn/worker.test.mjs
 // The Worker must turn a file stored whole or in parts into exactly the bytes a player
-// asks for. The fake ASSETS ignores Range, as Cloudflare's static assets do.
+// asks for. The fake ASSETS ignores Range and sends no content-length, as Cloudflare's
+// static assets do: the first deploy read the missing length as 0 and answered iOS's
+// opening `bytes=0-1` on every dhikr clip with a 416.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
@@ -13,7 +15,10 @@ const SMALL = bytes(240_000, 7);
 
 const store = new Map([
   ['/audio/hisn/20.mp3', SMALL],
-  [MANIFEST, new TextEncoder().encode(JSON.stringify({ '/recitations/r/002.mp3': BIG.length }))],
+  [MANIFEST, new TextEncoder().encode(JSON.stringify({
+        '/recitations/r/002.mp3': BIG.length,
+        '/audio/hisn/20.mp3': SMALL.length,
+      }))],
 ]);
 for (let i = 0; i * PART < BIG.length; i++) {
   store.set(partPath('/recitations/r/002.mp3', i), BIG.subarray(i * PART, (i + 1) * PART));
@@ -34,7 +39,7 @@ const env = {
         },
       });
       return new Response(stream, {
-        headers: { 'content-length': String(body.length), 'content-type': 'audio/mpeg' },
+        headers: { 'content-type': 'audio/mpeg' },
       });
     },
   },

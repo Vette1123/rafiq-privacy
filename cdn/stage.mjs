@@ -6,8 +6,8 @@
 // The site pages are not here: mohamedgado.com serves them. Fails before a deploy
 // Cloudflare would refuse.
 //
-// An audio file over PART bytes is cut into parts under /_parts/ and its size goes in
-// MANIFEST, which the Worker reads to stitch it back (cdn/worker.mjs).
+// Every audio file's size goes in MANIFEST; one over PART bytes is also cut into parts
+// under /_parts/, which the Worker reads to stitch it back (cdn/worker.mjs).
 import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 
@@ -62,13 +62,13 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
     const size = statSync(file).size;
     bytes += size;
     const isAudio = AUDIO.includes(path.split('/')[0]);
+    if (isAudio) sizes[`/${path}`] = size; // the Worker's only source for a file's size
     if (isAudio && size > PART) {
       const buf = readFileSync(file);
       for (let i = 0; i * PART < size; i++) {
         put(partPath(`/${path}`, i).slice(1), buf.subarray(i * PART, (i + 1) * PART));
         assets += 1;
       }
-      sizes[`/${path}`] = size;
       continue;
     }
     if (size > MAX_BYTES) throw new Error(`${path} is ${size} bytes, over 25 MiB`);
@@ -85,6 +85,6 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
   put(MANIFEST.slice(1), JSON.stringify(sizes));
   console.log(
     `staged ${list.length} files (${(bytes / 1048576).toFixed(1)} MB) as ${assets} assets; ` +
-      `${Object.keys(sizes).length} split into ${PART / 1048576} MiB parts`
+      `${Object.values(sizes).filter((n) => n > PART).length} split into ${PART / 1048576} MiB parts`
   );
 }

@@ -4,8 +4,8 @@
 // requests under /audio/ and /recitations/ (wrangler.jsonc, run_worker_first) come
 // here; everything else, the fonts included, never runs any code.
 //
-// A file over PART bytes is stored as parts (cdn/stage.mjs) and its size is in the
-// manifest stage writes beside them (MANIFEST); a smaller one is one asset. Either
+// Every audio file's size is in the manifest stage writes (MANIFEST). A file over PART
+// bytes is stored as parts (cdn/stage.mjs); a smaller one is one asset. Either
 // way the response is built from the parts a range covers, so a seek reads at most
 // one part it does not send.
 import { MANIFEST, PART, partPath } from './parts.mjs';
@@ -71,25 +71,21 @@ export default {
     const path = decodeURIComponent(url.pathname);
     const asset = (p) => env.ASSETS.fetch(new Request(new URL(p, url.origin)));
 
+    // Every audio file's size comes from the manifest: static assets send no
+    // content-length, and a size read from that header was 0 (a 416 for iOS's bytes=0-1).
+    const size = (await sizesOf(env, url.origin))[path];
+    if (size == null) return asset(path); // not one of ours: the asset layer's 404
     // The pieces this file is stored as: [asset path, bytes], in order.
-    let pieces;
-    let first; // a whole-file response already in hand, reused rather than fetched twice
-    const split = (await sizesOf(env, url.origin))[path];
-    if (split != null) {
-      pieces = Array.from({ length: Math.ceil(split / PART) }, (_, i) => [
-        partPath(path, i),
-        Math.min(PART, split - i * PART),
-      ]);
-    } else {
-      first = await asset(path);
-      if (first.status !== 200) return first;
-      pieces = [[path, Number(first.headers.get('content-length'))]];
-    }
-    const size = pieces.reduce((n, [, b]) => n + b, 0);
+    const pieces =
+      size > PART
+        ? Array.from({ length: Math.ceil(size / PART) }, (_, i) => [
+            partPath(path, i),
+            Math.min(PART, size - i * PART),
+          ])
+        : [[path, size]];
 
     const range = parseRange(request.headers.get('range'), size);
     if (range === 'bad') {
-      first?.body?.cancel();
       return new Response(null, {
         status: 416,
         headers: { ...HEADERS, 'content-range': `bytes */${size}` },
@@ -97,14 +93,9 @@ export default {
     }
     const [start, end] = range ?? [0, size - 1];
     const headers = { ...HEADERS, 'content-length': String(end - start + 1) };
-    const type = first?.headers.get('content-type');
-    if (type) headers['content-type'] = type;
     if (range) headers['content-range'] = `bytes ${start}-${end}/${size}`;
     const status = range ? 206 : 200;
-    if (request.method === 'HEAD') {
-      first?.body?.cancel();
-      return new Response(null, { status, headers });
-    }
+    if (request.method === 'HEAD') return new Response(null, { status, headers });
 
     const { readable, writable } = new TransformStream();
     const writer = writable.getWriter();
@@ -115,8 +106,7 @@ export default {
         offset += bytes;
         if (offset - 1 < start) continue;
         if (lo > end) break;
-        const res = first ?? (await asset(p));
-        first = undefined;
+        const res = await asset(p);
         if (res.status !== 200) throw new Error(`${p}: HTTP ${res.status}`);
         await copySlice(res.body, writer, Math.max(start - lo, 0), Math.min(end - lo, bytes - 1));
       }
