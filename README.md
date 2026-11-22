@@ -132,7 +132,7 @@ security, retention and deletion, rights, children, third parties, changes, cont
 | `backup.qurango.net`, `stream.radiojar.com` (redirects to plain-HTTP `n04.radiojar.com`) | Qur'an radio |
 | `archive.org` | Audio collections and cover artwork |
 | `anchor.fm`, `feeds.soundcloud.com`, `api.spreaker.com` | Podcast-based audio collections |
-| `vette1123.github.io` | Adhkar and du'a clips from `audio/`, the tashkīl layer from `fonts/` |
+| `rafiq-cdn.boogado.workers.dev` (Cloudflare, ours) | Adhkar and du'a clips, Saud Al-Jumah's recitation and the tashkīl layer, staged by `cdn/` from `audio/`, `fonts/` and rafiq-recitations (GitHub Pages before 1.107.0) |
 | `eu.i.posthog.com`, `eu-assets.i.posthog.com` | Usage analytics and error tracking, EU region |
 | `mohamedgado.com` (Cloudflare, forwards to PostHog EU) | Visit counts for these web pages only (section 10); the app never calls it |
 | `u.expo.dev` and EAS | Over-the-air updates, Insights, Observe |
