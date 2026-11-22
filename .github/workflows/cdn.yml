@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 22
       - name: Test the Worker
-        run: node --test cdn/
+        run: node --test cdn/worker.test.mjs
       - name: Stage audio/, fonts/ and the recitations
         run: node cdn/stage.mjs --recitations _recitations
       - name: Deploy the assets-only Worker

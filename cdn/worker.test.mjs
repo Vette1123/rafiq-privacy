@@ -1,4 +1,4 @@
-// node --test cdn/
+// node --test cdn/worker.test.mjs
 // The Worker must turn a file stored whole or in parts into exactly the bytes a player
 // asks for. The fake ASSETS ignores Range, as Cloudflare's static assets do.
 import assert from 'node:assert/strict';
