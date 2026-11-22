@@ -1,0 +1,39 @@
+# Publishes audio/ and fonts/ to Cloudflare (rafiq-cdn.boogado.workers.dev), the app's
+# MAIN host for them, then proves every file is there byte for byte. GitHub Pages and
+# raw.githubusercontent.com are only the app's fallback roads.
+#
+# An assets-only Worker: no code runs, requests are free and unlimited. The one ceiling
+# is 20,000 files a version (980 today); cdn/stage.mjs fails the run before it.
+# Secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID (the boogado account, as nafis).
+name: CDN
+on:
+  push:
+    branches: [main]
+    paths: ['audio/**', 'fonts/**', 'cdn/**', '.github/workflows/cdn.yml']
+  workflow_dispatch:
+  # Weekly: re-verify, so a file lost at the edge is noticed by a red run, not by a user.
+  schedule:
+    - cron: '23 4 * * 1'
+concurrency:
+  group: cdn
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Stage audio/ and fonts/
+        run: node cdn/stage.mjs
+      - name: Deploy the assets-only Worker
+        if: github.event_name != 'schedule'
+        working-directory: cdn
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx -y wrangler@4 deploy
+      - name: Verify every file, byte for byte
+        run: node cdn/verify.mjs --tries 6

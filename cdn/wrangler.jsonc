@@ -1,0 +1,18 @@
+// The app's first road to its audio and muṣḥaf fonts: an assets-only Worker, so
+// Cloudflare serves the files straight from its edge and no code runs at all.
+// Requests to static assets are free and unlimited on every plan; the free plan's
+// ceilings are 20,000 files and 25 MiB a file, and cdn/stage.mjs fails the build
+// before either is reached. GitHub Pages and raw.githubusercontent.com stay as the
+// second and third roads (rafiq: lib/net/mirror.ts).
+//
+// Deployed by .github/workflows/cdn.yml on every push that touches audio/ or fonts/.
+{
+  "name": "rafiq-cdn",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../.cdn-dist",
+    "not_found_handling": "none"
+  }
+}
