@@ -1,5 +1,5 @@
-# GitHub Pages publishes the pages only. The sounds and fonts the app downloads are
-# served by Cloudflare (cdn/), which stages them from this repo. Pages stopped hosting
-# them on 2026-11-22, once 1.107.0 was live: apps before it lose the clips they had
-# not saved, and Play's blocking update moves Android onto 1.107.0.
-exclude: [audio, fonts]
+# GitHub Pages still publishes the sounds and fonts, beside Cloudflare (cdn/), for
+# iPhones on 1.106.3 and older: they fetch from here and nothing can force them to
+# update (the CDN minVersion is read from 1.107.0). Exclude `audio` and `fonts` again
+# once iOS 1.107.x holds nearly every iPhone (PostHog $app_version on iOS).
+# Android needs none of this: Play's blocking update moved it onto 1.107.0.
