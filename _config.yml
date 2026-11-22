@@ -1,0 +1,5 @@
+# GitHub Pages publishes the pages only. The sounds and fonts the app downloads are
+# served by Cloudflare (cdn/), which stages them from this repo. Pages stopped hosting
+# them on 2026-11-22, once 1.107.0 was live: apps before it lose the clips they had
+# not saved, and Play's blocking update moves Android onto 1.107.0.
+exclude: [audio, fonts]
