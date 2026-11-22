@@ -48,6 +48,14 @@ export function sources(argv = process.argv.slice(2)) {
   ];
 }
 
+// Fonts and config.json: audio answers from the Worker, which sets its own headers.
+export const HEADERS =
+  '/*\n  Cache-Control: public, max-age=86400\n  Access-Control-Allow-Origin: *\n' +
+  // A font's path carries its version (fonts/qcf-marks/v1), so its bytes never change.
+  '/fonts/*\n  ! Cache-Control\n  Cache-Control: public, max-age=31536000, immutable\n' +
+  // Five minutes, so a raised minimum version reaches phones within the hour.
+  '/config.json\n  ! Cache-Control\n  Cache-Control: public, max-age=300\n';
+
 function put(rel, buf) {
   const dest = join(OUT, rel);
   mkdirSync(dirname(dest), { recursive: true });
@@ -82,13 +90,7 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
     assets += 1;
   }
   if (assets + 2 > MAX_FILES) throw new Error(`${assets} assets, over the ${MAX_FILES} a version allows`);
-  // Fonts and config.json: audio answers from the Worker, which sets its own headers.
-  writeFileSync(
-    join(OUT, '_headers'),
-    '/*\n  Cache-Control: public, max-age=86400\n  Access-Control-Allow-Origin: *\n' +
-      // Five minutes, so a raised minimum version reaches phones within the hour.
-      '/config.json\n  ! Cache-Control\n  Cache-Control: public, max-age=300\n'
-  );
+  writeFileSync(join(OUT, '_headers'), HEADERS);
   put(MANIFEST.slice(1), JSON.stringify(sizes));
   console.log(
     `staged ${list.length} files (${(bytes / 1048576).toFixed(1)} MB) as ${assets} assets; ` +

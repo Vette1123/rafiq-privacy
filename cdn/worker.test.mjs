@@ -119,3 +119,10 @@ test('parseRange reads the forms players send', () => {
   assert.equal(parseRange('bytes=100-', 100), 'bad');
   assert.equal(parseRange('bytes=5-2', 100), 'bad');
 });
+
+test('versioned fonts cache for a year, config.json for five minutes', async () => {
+  const { HEADERS } = await import('./stage.mjs');
+  const block = (path) => HEADERS.split(/\n(?=\/)/).find((b) => b.startsWith(`${path}\n`)) ?? '';
+  assert.match(block('/fonts/*'), /Cache-Control: public, max-age=31536000, immutable/);
+  assert.match(block('/config.json'), /Cache-Control: public, max-age=300/);
+});
