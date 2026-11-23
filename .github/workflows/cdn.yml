@@ -32,9 +32,13 @@ jobs:
         with:
           node-version: 22
       - name: Test the Worker
-        run: node --test cdn/worker.test.mjs
+        run: node --test cdn/worker.test.mjs cdn/verify.test.mjs
       - name: Stage audio/, fonts/ and the recitations
         run: node cdn/stage.mjs --recitations _recitations
+      # The hashes live before this deploy, a static file (no Worker request). verify.mjs
+      # reads only the audio that changed through the Worker; a 404 (first run) means all.
+      - name: Save the live audio hashes
+        run: curl -sf https://rafiq-cdn.boogado.workers.dev/_parts/hashes.json -o prev-hashes.json || echo '{}' > prev-hashes.json
       - name: Deploy the assets-only Worker
         if: github.event_name != 'schedule'
         working-directory: cdn
@@ -43,4 +47,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx -y wrangler@4 deploy
       - name: Verify every file, byte for byte
-        run: node cdn/verify.mjs --tries 6 --recitations _recitations
+        run: node cdn/verify.mjs --tries 6 --recitations _recitations --since prev-hashes.json

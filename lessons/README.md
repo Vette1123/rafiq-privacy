@@ -19,3 +19,4 @@
 | 2026-11-19 | [Pageviews go to PostHog, not Vercel](2026-11-19-posthog-pageviews.md) | A host move needs a grep for its dead paths; the beacon uses the absolute www ingest URL. |
 | 2026-11-23 | [Policy for optional Cloud sync](2026-11-23-optional-sync-policy.md) | Grep the claim, not the section; new pages join build-pages PAGES. |
 | 2026-11-23 | [The CDN Worker never copies audio in JS](2026-11-23-cdn-cpu-flat.md) | Skip with BYOB into one small buffer; a spy on getReader() misses pipeThrough and arrayBuffer(). |
+| 2026-11-23 | [The deploy check stops spending the Worker quota](2026-11-23-verify-spends-no-quota.md) | Static files are free; only changed audio goes through the metered Worker. Tally by user agent first. |

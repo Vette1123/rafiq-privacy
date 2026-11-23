@@ -8,10 +8,11 @@
 //
 // Every audio file's size goes in MANIFEST; one over PART bytes is also cut into parts
 // under /_parts/, which the Worker reads to stitch it back (cdn/worker.mjs).
+import { createHash } from 'node:crypto';
 import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 
-import { AUDIO, MANIFEST, PART, partPath } from './parts.mjs';
+import { AUDIO, HASHES, MANIFEST, PART, partPath } from './parts.mjs';
 
 const ROOT = join(import.meta.dirname, '..');
 const OUT = join(ROOT, '.cdn-dist');
@@ -69,6 +70,7 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
     throw new Error('no recitations found: pass --recitations <rafiq-recitations checkout>');
   }
   const sizes = {};
+  const hashes = {};
   let assets = 0;
   let bytes = 0;
   for (const { path, file } of list) {
@@ -76,6 +78,7 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
     bytes += size;
     const isAudio = AUDIO.includes(path.split('/')[0]);
     if (isAudio) sizes[`/${path}`] = size; // the Worker's only source for a file's size
+    if (isAudio) hashes[`/${path}`] = createHash('sha256').update(readFileSync(file)).digest('hex');
     if (isAudio && size > PART) {
       const buf = readFileSync(file);
       for (let i = 0; i * PART < size; i++) {
@@ -89,9 +92,10 @@ if (import.meta.main ?? process.argv[1]?.endsWith('stage.mjs')) {
     copyFileSync(file, join(OUT, path));
     assets += 1;
   }
-  if (assets + 2 > MAX_FILES) throw new Error(`${assets} assets, over the ${MAX_FILES} a version allows`);
+  if (assets + 3 > MAX_FILES) throw new Error(`${assets} assets, over the ${MAX_FILES} a version allows`);
   writeFileSync(join(OUT, '_headers'), HEADERS);
   put(MANIFEST.slice(1), JSON.stringify(sizes));
+  put(HASHES.slice(1), JSON.stringify(hashes));
   console.log(
     `staged ${list.length} files (${(bytes / 1048576).toFixed(1)} MB) as ${assets} assets; ` +
       `${Object.values(sizes).filter((n) => n > PART).length} split into ${PART / 1048576} MiB parts`

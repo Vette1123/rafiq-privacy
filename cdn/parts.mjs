@@ -17,3 +17,10 @@ export const AUDIO = ['audio', 'recitations'];
 
 /** Every audio file's size, `{ "/recitations/…/002.mp3": 59874159 }`, as an asset. */
 export const MANIFEST = '/_parts/sizes.json';
+
+/**
+ * Every audio file's SHA-256, `{ "/audio/hisn/1.mp3": "9f…" }`, as a static asset (free to
+ * read). verify.mjs diffs it against the copy live before a deploy, so only the files
+ * whose bytes changed go through the metered Worker.
+ */
+export const HASHES = '/_parts/hashes.json';
