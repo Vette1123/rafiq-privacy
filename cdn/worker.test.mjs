@@ -24,6 +24,19 @@ for (let i = 0; i * PART < BIG.length; i++) {
   store.set(partPath('/recitations/r/002.mp3', i), BIG.subarray(i * PART, (i + 1) * PART));
 }
 const fetched = [];
+// Parts whose body was read as a stream. On Workers a stream pulled through JS costs
+// CPU per chunk; only a part the range covers whole may be streamed (piped natively).
+const streamed = [];
+class Asset extends Response {
+  constructor(body, init, path) {
+    super(body, init);
+    this.path = path;
+  }
+  get body() {
+    streamed.push(this.path);
+    return super.body;
+  }
+}
 const env = {
   ASSETS: {
     async fetch(req) {
@@ -38,9 +51,7 @@ const env = {
           c.close();
         },
       });
-      return new Response(stream, {
-        headers: { 'content-type': 'audio/mpeg' },
-      });
+      return new Asset(stream, { headers: { 'content-type': 'audio/mpeg' } }, path);
     },
   },
 };
@@ -73,6 +84,21 @@ test('a range across a part boundary is a 206 with exactly those bytes', async (
     partPath('/recitations/r/002.mp3', 0),
     partPath('/recitations/r/002.mp3', 1),
   ]);
+});
+
+test('an edge part is read in one call, never pulled through JS chunk by chunk', async () => {
+  // Ranges deep inside a part cost 20-58 ms of CPU on 2026-11-23 (limit 10 ms) when
+  // the bytes before the window ran through a JS TransformStream.
+  streamed.length = 0;
+  const from = PART + 1_500_000;
+  const res = await get('/recitations/r/002.mp3', `bytes=${from}-${from + 99_999}`);
+  assert.deepEqual(await body(res), BIG.subarray(from, from + 100_000));
+  assert.deepEqual(streamed, []);
+  // A range spanning a whole middle part pipes that part, and only that one.
+  streamed.length = 0;
+  const all = await get('/recitations/r/002.mp3', `bytes=10-${PART * 2 + 10}`);
+  assert.deepEqual(await body(all), BIG.subarray(10, PART * 2 + 11));
+  assert.deepEqual(streamed, [partPath('/recitations/r/002.mp3', 1)]);
 });
 
 test('a seek to the end reads only the last part', async () => {

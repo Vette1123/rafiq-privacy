@@ -40,23 +40,6 @@ export function parseRange(header, size) {
   return end < start ? 'bad' : [start, end];
 }
 
-/** Passes bytes [from, to] of a stream through, then stops reading it. */
-function slicer(from, to) {
-  let at = 0;
-  return new TransformStream({
-    transform(chunk, out) {
-      const lo = Math.max(from - at, 0);
-      const hi = Math.min(to - at + 1, chunk.byteLength);
-      if (lo < hi) out.enqueue(chunk.subarray(lo, hi));
-      at += chunk.byteLength;
-      if (at > to) out.terminate(); // cancels the rest of the part
-    },
-    flush() {
-      if (at <= to) throw new Error(`part ended at ${at}, wanted ${to + 1}`);
-    },
-  });
-}
-
 /**
  * The response body. A FixedLengthStream on Workers: it sends content-length, which a
  * plain stream loses, so a body cut short is an error the player sees instead of a
@@ -114,9 +97,12 @@ export default {
     const status = range ? 206 : 200;
     if (request.method === 'HEAD') return new Response(null, { status, headers });
 
-    // A part the range covers whole is piped natively; only the two edge parts run
-    // the slicer. The free plan allows 10 ms of CPU a request, and copying a 57 MB
-    // surah chunk by chunk in JS spent it.
+    // No byte of audio passes through JS chunk by chunk: the free plan allows 10 ms of
+    // CPU a request, and JS copying spent it twice (a 57 MB surah on 2026-11-22: 230
+    // requests killed; a 100 KB window deep in a part on 2026-11-23: up to 58 ms).
+    // A part the range covers whole is piped stream to stream, which the runtime does
+    // natively. An edge part (at most two, PART bytes each) is read in one native call
+    // and its window written as one chunk, so CPU stays flat wherever the range falls.
     const { readable, writable } = bodyStream(end - start + 1);
     (async () => {
       let offset = 0;
@@ -129,8 +115,15 @@ export default {
         if (res.status !== 200) throw new Error(`${p}: HTTP ${res.status}`);
         const from = Math.max(start - lo, 0);
         const to = Math.min(end - lo, bytes - 1);
-        const body = from === 0 && to === bytes - 1 ? res.body : res.body.pipeThrough(slicer(from, to));
-        await body.pipeTo(writable, { preventClose: true });
+        if (from === 0 && to === bytes - 1) {
+          await res.body.pipeTo(writable, { preventClose: true });
+          continue;
+        }
+        const part = new Uint8Array(await res.arrayBuffer());
+        if (part.byteLength < to + 1) throw new Error(`${p}: ${part.byteLength} bytes, wanted ${to + 1}`);
+        const w = writable.getWriter();
+        await w.write(part.subarray(from, to + 1));
+        w.releaseLock();
       }
       await writable.close();
     })().catch((e) => writable.abort(e).catch(() => {}));
