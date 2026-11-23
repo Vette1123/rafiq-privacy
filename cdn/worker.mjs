@@ -40,6 +40,41 @@ export function parseRange(header, size) {
   return end < start ? 'bad' : [start, end];
 }
 
+/** Skipped bytes land in one reused buffer this size, so memory per request is flat. */
+const SCRATCH = 256 * 1024;
+
+/**
+ * One BYOB read into `view`, filled completely. On Workers `readAtLeast` fills it in a
+ * single native call; elsewhere (Node, the tests) plain `read` loops. BYOB moves the
+ * buffer, so the caller keeps `value.buffer` for the next read.
+ */
+async function fill(reader, view) {
+  // Read before the first fill: a BYOB read detaches `view` (its length becomes 0).
+  const { byteOffset, byteLength } = view;
+  let buf = view.buffer;
+  let got = 0;
+  while (got < byteLength) {
+    const into = new Uint8Array(buf, byteOffset + got, byteLength - got);
+    const { value, done } = reader.readAtLeast
+      ? await reader.readAtLeast(into.byteLength, into)
+      : await reader.read(into);
+    if (done || !value) throw new Error(`part ended ${byteLength - got} bytes short`);
+    buf = value.buffer;
+    got += value.byteLength;
+  }
+  return new Uint8Array(buf, byteOffset, byteLength);
+}
+
+/** Reads and drops `n` bytes through one small buffer. */
+async function skip(reader, n) {
+  let scratch = new Uint8Array(Math.min(n, SCRATCH));
+  while (n > 0) {
+    const len = Math.min(n, scratch.buffer.byteLength);
+    scratch = await fill(reader, new Uint8Array(scratch.buffer, 0, len));
+    n -= len;
+  }
+}
+
 /**
  * The response body. A FixedLengthStream on Workers: it sends content-length, which a
  * plain stream loses, so a body cut short is an error the player sees instead of a
@@ -97,12 +132,14 @@ export default {
     const status = range ? 206 : 200;
     if (request.method === 'HEAD') return new Response(null, { status, headers });
 
-    // No byte of audio passes through JS chunk by chunk: the free plan allows 10 ms of
-    // CPU a request, and JS copying spent it twice (a 57 MB surah on 2026-11-22: 230
-    // requests killed; a 100 KB window deep in a part on 2026-11-23: up to 58 ms).
-    // A part the range covers whole is piped stream to stream, which the runtime does
-    // natively. An edge part (at most two, PART bytes each) is read in one native call
-    // and its window written as one chunk, so CPU stays flat wherever the range falls.
+    // No byte of audio is copied chunk by chunk in JS, and no request holds a whole
+    // part in memory. The free plan allows 10 ms of CPU and 128 MB per isolate: a JS
+    // TransformStream over a 57 MB surah killed 230 requests (2026-11-22), and a 100 KB
+    // window deep in a part spent up to 58 ms (2026-11-23).
+    // - A part the range covers whole is piped stream to stream, natively.
+    // - An edge part skips its leading bytes through a 256 KB BYOB buffer (native
+    //   fills), then pipes the rest natively when the range runs to the part's end
+    //   (a player's open `bytes=N-`), or reads exactly the window when it does not.
     const { readable, writable } = bodyStream(end - start + 1);
     (async () => {
       let offset = 0;
@@ -115,15 +152,20 @@ export default {
         if (res.status !== 200) throw new Error(`${p}: HTTP ${res.status}`);
         const from = Math.max(start - lo, 0);
         const to = Math.min(end - lo, bytes - 1);
-        if (from === 0 && to === bytes - 1) {
-          await res.body.pipeTo(writable, { preventClose: true });
+        const body = res.body;
+        const whole = to === bytes - 1;
+        const reader = from > 0 || !whole ? body.getReader({ mode: 'byob' }) : null;
+        if (from > 0) await skip(reader, from);
+        if (!whole) {
+          const window = await fill(reader, new Uint8Array(to - from + 1));
+          await reader.cancel();
+          const w = writable.getWriter();
+          await w.write(window);
+          w.releaseLock();
           continue;
         }
-        const part = new Uint8Array(await res.arrayBuffer());
-        if (part.byteLength < to + 1) throw new Error(`${p}: ${part.byteLength} bytes, wanted ${to + 1}`);
-        const w = writable.getWriter();
-        await w.write(part.subarray(from, to + 1));
-        w.releaseLock();
+        reader?.releaseLock();
+        await body.pipeTo(writable, { preventClose: true });
       }
       await writable.close();
     })().catch((e) => writable.abort(e).catch(() => {}));

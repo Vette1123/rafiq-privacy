@@ -24,8 +24,9 @@ for (let i = 0; i * PART < BIG.length; i++) {
   store.set(partPath('/recitations/r/002.mp3', i), BIG.subarray(i * PART, (i + 1) * PART));
 }
 const fetched = [];
-// Parts whose body was read as a stream. On Workers a stream pulled through JS costs
-// CPU per chunk; only a part the range covers whole may be streamed (piped natively).
+// Parts whose bytes were copied through JS: a default reader, pipeThrough or
+// arrayBuffer(). On Workers each costs CPU per chunk or holds the whole part in
+// memory. The only reads allowed are a native pipeTo and a BYOB fill.
 const streamed = [];
 class Asset extends Response {
   constructor(body, init, path) {
@@ -33,8 +34,22 @@ class Asset extends Response {
     this.path = path;
   }
   get body() {
+    const body = super.body;
+    const getReader = body.getReader.bind(body);
+    const pipeThrough = body.pipeThrough.bind(body);
+    body.getReader = (opts) => {
+      if (opts?.mode !== 'byob') streamed.push(this.path);
+      return getReader(opts);
+    };
+    body.pipeThrough = (...args) => {
+      streamed.push(this.path);
+      return pipeThrough(...args);
+    };
+    return body;
+  }
+  arrayBuffer() {
     streamed.push(this.path);
-    return super.body;
+    return super.arrayBuffer();
   }
 }
 const env = {
@@ -46,6 +61,7 @@ const env = {
       if (!body) return new Response('not found', { status: 404 });
       // Chunked like a network body, to exercise slicing across chunk edges.
       const stream = new ReadableStream({
+        type: 'bytes', // Workers' asset bodies are byte streams: they take a BYOB reader
         start(c) {
           for (let o = 0; o < body.length; o += 65_536) c.enqueue(body.slice(o, o + 65_536));
           c.close();
@@ -86,7 +102,7 @@ test('a range across a part boundary is a 206 with exactly those bytes', async (
   ]);
 });
 
-test('an edge part is read in one call, never pulled through JS chunk by chunk', async () => {
+test('an edge part is skipped and filled natively, never pulled through JS chunk by chunk', async () => {
   // Ranges deep inside a part cost 20-58 ms of CPU on 2026-11-23 (limit 10 ms) when
   // the bytes before the window ran through a JS TransformStream.
   streamed.length = 0;
@@ -94,11 +110,14 @@ test('an edge part is read in one call, never pulled through JS chunk by chunk',
   const res = await get('/recitations/r/002.mp3', `bytes=${from}-${from + 99_999}`);
   assert.deepEqual(await body(res), BIG.subarray(from, from + 100_000));
   assert.deepEqual(streamed, []);
-  // A range spanning a whole middle part pipes that part, and only that one.
-  streamed.length = 0;
+  // Spanning parts, ending inside one, and a player's open range: all byte-exact.
   const all = await get('/recitations/r/002.mp3', `bytes=10-${PART * 2 + 10}`);
   assert.deepEqual(await body(all), BIG.subarray(10, PART * 2 + 11));
-  assert.deepEqual(streamed, [partPath('/recitations/r/002.mp3', 1)]);
+  const open = await get('/recitations/r/002.mp3', `bytes=${PART - 7}-`);
+  assert.deepEqual(await body(open), BIG.subarray(PART - 7));
+  const small = await get('/audio/hisn/20.mp3', 'bytes=100000-100009');
+  assert.deepEqual(await body(small), SMALL.subarray(100000, 100010));
+  assert.deepEqual(streamed, []);
 });
 
 test('a seek to the end reads only the last part', async () => {
