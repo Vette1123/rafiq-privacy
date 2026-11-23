@@ -114,7 +114,7 @@ change log.
 
 ## What the policy covers
 
-Sections 1 to 19: scope, the no-accounts and no-server posture, on-device data, location
+Sections 1 to 19: scope, the optional account and Cloud sync, on-device data, location
 and prayer times, qibla and sensors, Qur'an text and fonts and translations, recitation
 and audio collections, notifications and exact alarms and widgets, share cards and QR,
 analytics and crash reporting, updates and rating, the Android permission table,
@@ -176,7 +176,7 @@ When the app changes, the policy changes in the same session as the feature, not
 
 - Store listing: `https://play.google.com/store/apps/details?id=com.mohamedgado.rafiq`
 - Privacy policy URL: `https://vette1123.github.io/rafiq-privacy/`
-- Data deletion URL: not applicable, no accounts
+- Account deletion URL: `https://www.mohamedgado.com/projects/rafiq/delete-account` (also `delete-account.html` here)
 
 The Data safety declaration is `docs/PLAY-DATA-SAFETY.md` in the app repo, and the App Store
 labels are section 5 of `docs/APPLE-SUBMISSION.md`. Change them with this page.
