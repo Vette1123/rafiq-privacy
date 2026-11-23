@@ -28,8 +28,10 @@ timings, adhkar and tasbih, duas and the names of Allah, the Hijri calendar, aud
 collections, Qur'an radio, a zakat calculator, a prayer tracker, home-screen widgets, quick
 actions, and share cards. On Android, iPhone, iPad and Mac.
 
-No accounts, no ads, no backend of ours. Personal data (settings, bookmarks, notes,
-progress, counters, prayer tracker, audio history, coordinates) stays on the device.
+No account is needed and there are no ads. Personal data (settings, bookmarks, notes,
+progress, counters, prayer tracker, audio history, coordinates) stays on the device, unless a
+supporter turns on the optional Cloud sync: then their sign-in email and name and a copy of
+their app data are kept on our Cloudflare server `rafiq-api` (section 2 of the policy).
 Content comes from public Islamic and map APIs that the device calls directly. Usage events
 and crash reports go to PostHog and Expo under a random id (section 10 of the policy).
 
@@ -38,6 +40,7 @@ and crash reports go to PostHog and Expo under a random id (section 10 of the po
 | File | Purpose |
 |---|---|
 | `index.html` | The policy. Arabic and English, both in the DOM, one visible at a time |
+| `delete-account.html` | How to delete the Cloud sync copy or the account, in the app or by email. Arabic and English, same kit as the policy |
 | `404.html` | Meta-refresh to the policy, so no old or mistyped link dead-ends |
 | `go.html` | The install link inside every share card's QR: sends an iPhone to the App Store, everything else to Play. Served at `/go`; the path must never change, printed cards cannot be updated |
 | `robots.txt` | Allow all except `/audio/`, points at the sitemap |
@@ -75,9 +78,11 @@ so the durations of its files are what the new corpus is checked against.
 They live beside the policy because this is the Pages site the app already depends on:
 one public repo, no build, no cost, and a URL that has to keep resolving anyway.
 
-There is no account-deletion page, and Play does not require one: the app has no accounts
-and we hold no copy of anyone's data. Deletion is covered by section 14 of the policy
-(uninstall, or clear app storage). Analytics are deleted on request by email.
+Account deletion has its own page, `delete-account.html` (served at `/delete-account`; the
+Play Console account-deletion URL points at it): the in-app steps (Settings, Support Rafiq,
+Delete cloud copy / Delete account) and an email fallback. Without Cloud sync there is no
+account, and deletion is uninstalling or clearing app storage (section 14 of the policy).
+Analytics are deleted on request by email.
 
 ## Why a separate repo
 

@@ -13,6 +13,7 @@ const repo = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = {
   // The policy ships both languages: the show-one-language rules and both footers.
   'index.html': [...SITE, 'lang.css', 'doc.css', 'footer.en.html', 'footer.ar.html'],
+  'delete-account.html': [...SITE, 'lang.css', 'doc.css', 'footer.en.html', 'footer.ar.html'],
   '404.html': [...SITE, 'footer.en.html'],
 };
 
