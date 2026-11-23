@@ -7,6 +7,10 @@
 // cdn/worker.mjs first. Worker requests are the one metered thing: 100,000 a day on
 // the free plan, against a few hundred plays a day in November 2026.
 // ponytail: past ~30,000 a day, move to Workers Paid ($5, 10M a month) or R2 on a domain.
+// ponytail: a seek costs ~1-4 ms of CPU wherever it lands (BYOB, worker.mjs), but a
+// whole-file GET pipes every part, ~0.3 ms/MB: the 57 MB al-Baqarah is ~17 ms against
+// the free 10 ms. Tolerated as an occasional overage; R2 (native ranges, no Worker
+// bytes) or Workers Paid removes it.
 //
 // Free-plan ceilings: 20,000 assets a version and 25 MiB an asset; cdn/stage.mjs
 // splits large audio into 2 MiB parts and fails the build before either is reached.

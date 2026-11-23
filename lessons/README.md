@@ -18,3 +18,4 @@
 | 2026-11-17 | [build-go runs from any folder](2026-11-17-build-go-cwd.md) | Scripts resolve the repo from import.meta.url, never cwd; --check compares through CRLF normalisation. |
 | 2026-11-19 | [Pageviews go to PostHog, not Vercel](2026-11-19-posthog-pageviews.md) | A host move needs a grep for its dead paths; the beacon uses the absolute www ingest URL. |
 | 2026-11-23 | [Policy for optional Cloud sync](2026-11-23-optional-sync-policy.md) | Grep the claim, not the section; new pages join build-pages PAGES. |
+| 2026-11-23 | [The CDN Worker never copies audio in JS](2026-11-23-cdn-cpu-flat.md) | Skip with BYOB into one small buffer; a spy on getReader() misses pipeThrough and arrayBuffer(). |
